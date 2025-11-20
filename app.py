@@ -124,15 +124,16 @@ def main():
     st.markdown("## 📋 A) Demographics")
     col1, col2 = st.columns(2)
     with col1:
-        age = st.number_input("Age (years):", min_value=0, max_value=120, value=30, step=1)
-        if age >= 70:
-            points += 3
-        elif age >= 60:
-            points += 2
-        elif age >= 40:
-            points += 1
+        age = st.number_input("Age (years): *", min_value=0, max_value=120, value=None, step=1, placeholder="Enter your age")
+        if age is not None:
+            if age >= 70:
+                points += 3
+            elif age >= 60:
+                points += 2
+            elif age >= 40:
+                points += 1
     with col2:
-        sex = st.radio("Sex assigned at birth:", ["Female", "Male"])
+        sex = st.radio("Sex assigned at birth: *", ["Female", "Male"], index=None)
         if sex == "Male":
             points += 1
     
@@ -141,22 +142,22 @@ def main():
     
     col1, col2 = st.columns(2)
     with col1:
-        prior_rd = st.radio("Ever diagnosed with retinal detachment in either eye?", ["No", "Yes"])
+        prior_rd = st.radio("Ever diagnosed with retinal detachment in either eye? *", ["No", "Yes"], index=None)
         if prior_rd == "Yes":
             points += 5
         
-        cataract = st.radio("Cataract surgery in this eye?", ["No", "Yes", "Not sure"])
+        cataract = st.radio("Cataract surgery in this eye? *", ["No", "Yes", "Not sure"], index=None)
         if cataract == "Yes":
             points += 2
         
-        yag = st.radio("Nd:YAG posterior capsulotomy (laser) in this eye?", ["No", "Yes", "Not sure"])
+        yag = st.radio("Nd:YAG posterior capsulotomy (laser) in this eye? *", ["No", "Yes", "Not sure"], index=None)
         if yag == "Yes":
             points += 2
     
     with col2:
-        myopia = st.radio("Do you wear glasses/contacts for nearsightedness (myopia)?", ["No", "Yes"])
+        myopia = st.radio("Do you wear glasses/contacts for nearsightedness (myopia)? *", ["No", "Yes"], index=None)
         if myopia == "Yes":
-            myopia_level = st.radio("Approximate prescription:", ["None", "Mild (< -3D)", "Moderate (-3 to -6D)", "High (≤ -6D)", "Don't know"])
+            myopia_level = st.radio("Approximate prescription: *", ["None", "Mild (< -3D)", "Moderate (-3 to -6D)", "High (≤ -6D)", "Don't know"], index=None)
             if myopia_level == "Mild (< -3D)":
                 points += 1
             elif myopia_level == "Moderate (-3 to -6D)":
@@ -164,11 +165,11 @@ def main():
             elif myopia_level == "High (≤ -6D)":
                 points += 4
         
-        retinal_condition = st.radio("Any known retinal condition (e.g., lattice degeneration) diagnosed by an eye doctor (this eye)?", ["No", "Yes", "Not sure"])
+        retinal_condition = st.radio("Any known retinal condition (e.g., lattice degeneration) diagnosed by an eye doctor (this eye)? *", ["No", "Yes", "Not sure"], index=None)
         if retinal_condition == "Yes":
             points += 4
         
-        eye_trauma = st.radio("Any prior significant eye trauma to this eye?", ["No", "Yes"])
+        eye_trauma = st.radio("Any prior significant eye trauma to this eye? *", ["No", "Yes"], index=None)
         if eye_trauma == "Yes":
             points += 3
     
@@ -176,11 +177,11 @@ def main():
     st.markdown("## 🧬 C) Systemic / Family History")
     col1, col2 = st.columns(2)
     with col1:
-        diabetes = st.radio("Do you have diabetes?", ["No", "Yes", "Not sure"])
+        diabetes = st.radio("Do you have diabetes? *", ["No", "Yes", "Not sure"], index=None)
         if diabetes == "Yes":
             points += 1
     with col2:
-        family_history = st.radio("Family history of retinal detachment?", ["No", "Yes", "Not sure"])
+        family_history = st.radio("Family history of retinal detachment? *", ["No", "Yes", "Not sure"], index=None)
         if family_history == "Yes":
             points += 3
     
@@ -189,43 +190,43 @@ def main():
     
     col1, col2 = st.columns(2)
     with col1:
-        floaters = st.radio("New floaters in the last few days (this eye)?", ["No", "Yes"])
+        floaters = st.radio("New floaters in the last few days (this eye)? *", ["No", "Yes"], index=None)
         if floaters == "Yes":
             points += 3
-            floaters_onset = st.radio("If yes, started:", ["More than 48 hours ago", "Within 48 hours"], key="floaters_onset")
+            floaters_onset = st.radio("If yes, started: *", ["More than 48 hours ago", "Within 48 hours"], key="floaters_onset", index=None)
             if floaters_onset == "Within 48 hours":
                 points += 1
         
-        flashes = st.radio("Flashes of light in the last few days (this eye)?", ["None", "Occasional", "Frequent"])
+        flashes = st.radio("Flashes of light in the last few days (this eye)? *", ["None", "Occasional", "Frequent"], index=None)
         if flashes == "Occasional":
             points += 2
-            flashes_onset = st.radio("If occasional/frequent, started:", ["More than 48 hours ago", "Within 48 hours"], key="flashes_onset")
+            flashes_onset = st.radio("If occasional/frequent, started: *", ["More than 48 hours ago", "Within 48 hours"], key="flashes_onset", index=None)
             if flashes_onset == "Within 48 hours":
                 points += 1
         elif flashes == "Frequent":
             points += 3
-            flashes_onset = st.radio("If occasional/frequent, started:", ["More than 48 hours ago", "Within 48 hours"], key="flashes_onset2")
+            flashes_onset = st.radio("If occasional/frequent, started: *", ["More than 48 hours ago", "Within 48 hours"], key="flashes_onset2", index=None)
             if flashes_onset == "Within 48 hours":
                 points += 1
         
-        shadow = st.radio("Dark shadow/curtain/veil in vision (this eye)?", ["No", "Yes"])
+        shadow = st.radio("Dark shadow/curtain/veil in vision (this eye)? *", ["No", "Yes"], index=None)
         if shadow == "Yes":
             points += 8
-            shadow_onset = st.radio("If yes, how long ago?", ["More than 24 hours ago", "Within 24 hours"], key="shadow_onset")
+            shadow_onset = st.radio("If yes, how long ago? *", ["More than 24 hours ago", "Within 24 hours"], key="shadow_onset", index=None)
             if shadow_onset == "Within 24 hours":
                 points += 2
                 emergency_override = True
     
     with col2:
-        vision_decrease = st.radio("Sudden decrease in vision (this eye)?", ["No", "Yes"])
+        vision_decrease = st.radio("Sudden decrease in vision (this eye)? *", ["No", "Yes"], index=None)
         if vision_decrease == "Yes":
             points += 5
-            vision_onset = st.radio("If yes, onset:", ["More than 24 hours ago", "Within 24 hours"], key="vision_onset")
+            vision_onset = st.radio("If yes, onset: *", ["More than 24 hours ago", "Within 24 hours"], key="vision_onset", index=None)
             if vision_onset == "Within 24 hours":
                 points += 2
                 emergency_override = True
         
-        pain = st.radio("New double vision or severe eye pain (this eye)?", ["No", "Yes"])
+        pain = st.radio("New double vision or severe eye pain (this eye)? *", ["No", "Yes"], index=None)
         if pain == "Yes":
             points += 1
     
@@ -233,8 +234,8 @@ def main():
     st.markdown("## 📊 E) Visual Function & Follow-up")
     col1, col2 = st.columns(2)
     with col1:
-        vision_level = st.radio("Approximate vision in this eye (without correction):", 
-                               ["20/20 or better", "20/30–20/60", "20/80–20/200", "Worse than 20/200", "Don't know"])
+        vision_level = st.radio("Approximate vision in this eye (without correction): *", 
+                               ["20/20 or better", "20/30–20/60", "20/80–20/200", "Worse than 20/200", "Don't know"], index=None)
         if vision_level == "20/30–20/60":
             points += 1
         elif vision_level == "20/80–20/200":
@@ -242,8 +243,8 @@ def main():
         elif vision_level == "Worse than 20/200":
             points += 3
     with col2:
-        last_exam = st.radio("Date of last dilated eye exam (if known):", 
-                            ["Within 2 years", "More than 2 years ago", "Never"])
+        last_exam = st.radio("Date of last dilated eye exam (if known): *", 
+                            ["Within 2 years", "More than 2 years ago", "Never"], index=None)
         if last_exam == "More than 2 years ago":
             points += 1
         elif last_exam == "Never":
@@ -251,7 +252,7 @@ def main():
     
     # Lifestyle/Triggers Section
     st.markdown("## 🏋️ F) Lifestyle / Recent Triggers")
-    recent_triggers = st.multiselect("Recent potential triggers in the last 3 months (check all that apply):", 
+    recent_triggers = st.multiselect("Recent potential triggers in the last 3 months (check all that apply): *", 
                                      ["Heavy head/eye trauma", "Contact sports", 
                                       "Heavy lifting/physical strain immediately before symptoms", 
                                       "None", "Not sure"])
@@ -262,6 +263,55 @@ def main():
     
     # Calculate Button
     st.markdown("<br>", unsafe_allow_html=True)
+    
+    # Validation - check if all required fields are filled
+    missing_fields = []
+    if age is None:
+        missing_fields.append("Age")
+    if sex is None:
+        missing_fields.append("Sex assigned at birth")
+    if prior_rd is None:
+        missing_fields.append("Prior retinal detachment")
+    if cataract is None:
+        missing_fields.append("Cataract surgery")
+    if yag is None:
+        missing_fields.append("Nd:YAG capsulotomy")
+    if myopia is None:
+        missing_fields.append("Myopia")
+    if myopia == "Yes" and myopia_level is None:
+        missing_fields.append("Myopia prescription level")
+    if retinal_condition is None:
+        missing_fields.append("Known retinal condition")
+    if eye_trauma is None:
+        missing_fields.append("Prior eye trauma")
+    if diabetes is None:
+        missing_fields.append("Diabetes")
+    if family_history is None:
+        missing_fields.append("Family history of retinal detachment")
+    if floaters is None:
+        missing_fields.append("New floaters")
+    if floaters == "Yes" and floaters_onset is None:
+        missing_fields.append("Floaters onset timing")
+    if flashes is None:
+        missing_fields.append("Flashes of light")
+    if flashes in ["Occasional", "Frequent"] and flashes_onset is None:
+        missing_fields.append("Flashes onset timing")
+    if shadow is None:
+        missing_fields.append("Dark shadow/curtain/veil")
+    if shadow == "Yes" and shadow_onset is None:
+        missing_fields.append("Shadow onset timing")
+    if vision_decrease is None:
+        missing_fields.append("Sudden decrease in vision")
+    if vision_decrease == "Yes" and vision_onset is None:
+        missing_fields.append("Vision decrease onset timing")
+    if pain is None:
+        missing_fields.append("Double vision or eye pain")
+    if vision_level is None:
+        missing_fields.append("Approximate vision")
+    if last_exam is None:
+        missing_fields.append("Date of last dilated eye exam")
+    if len(recent_triggers) == 0:
+        missing_fields.append("Recent potential triggers")
     
     @st.dialog("📊 Your Risk Assessment Results", width="large")
     def show_results(points, percentage, emergency_override):
@@ -348,8 +398,11 @@ def main():
         st.info("💡 **Important**: This screening tool helps determine the urgency of eye care based on evidence-based risk factors. Early detection and treatment of retinal detachment can preserve vision and prevent blindness.")
     
     if st.button("🔍 Calculate My Risk Assessment", type="primary"):
-        percentage = calculate_percentage(points)
-        show_results(points, percentage, emergency_override)
+        if missing_fields:
+            st.error(f"⚠️ Please complete all required fields (*) before calculating. Missing: {', '.join(missing_fields)}")
+        else:
+            percentage = calculate_percentage(points)
+            show_results(points, percentage, emergency_override)
 
 if __name__ == "__main__":
     main()

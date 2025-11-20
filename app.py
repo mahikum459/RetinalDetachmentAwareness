@@ -115,18 +115,7 @@ def calculate_percentage(points):
 def main():
     # Header
     st.markdown("# 👁️ Retinal Detachment Risk Assessment")
-    st.markdown('<p class="subtitle">Evidence-based clinical screening tool to determine urgency of eye care</p>', unsafe_allow_html=True)
-    
-    # Clinical Notice
-    st.markdown("""
-    <div class="clinical-notice">
-        <h3>🏥 Clinical Screening Tool</h3>
-        <p><strong>This assessment can help save your vision.</strong> Early detection of retinal detachment is critical. Use this tool to determine how urgently you should see an eye care professional.</p>
-        <p>✓ Based on validated clinical risk factors<br>
-        ✓ Helps prioritize when to seek care<br>
-        ✓ May prevent permanent vision loss through timely intervention</p>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown('<p class="subtitle">This assessment helps determine how urgently you should see an eye care professional based on your risk factors and symptoms.</p>', unsafe_allow_html=True)
     
     points = 0
     emergency_override = False

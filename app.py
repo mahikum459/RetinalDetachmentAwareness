@@ -262,14 +262,9 @@ def main():
     
     # Calculate Button
     st.markdown("<br>", unsafe_allow_html=True)
-    if st.button("🔍 Calculate My Risk Assessment", type="primary"):
-        percentage = calculate_percentage(points)
-        
-        st.markdown("<br><br>", unsafe_allow_html=True)
-        
-        # Results Header
-        st.markdown("## 📊 Your Risk Assessment Results")
-        
+    
+    @st.dialog("📊 Your Risk Assessment Results", width="large")
+    def show_results(points, percentage, emergency_override):
         # Metrics
         col1, col2 = st.columns([1, 1])
         with col1:
@@ -351,6 +346,10 @@ def main():
         # Important Note
         st.markdown("<br>", unsafe_allow_html=True)
         st.info("💡 **Important**: This screening tool helps determine the urgency of eye care based on evidence-based risk factors. Early detection and treatment of retinal detachment can preserve vision and prevent blindness.")
+    
+    if st.button("🔍 Calculate My Risk Assessment", type="primary"):
+        percentage = calculate_percentage(points)
+        show_results(points, percentage, emergency_override)
 
 if __name__ == "__main__":
     main()

@@ -271,12 +271,10 @@ def main():
         st.markdown("## 📊 Your Risk Assessment Results")
         
         # Metrics
-        col1, col2, col3 = st.columns([1, 1, 1])
+        col1, col2 = st.columns([1, 1])
         with col1:
-            st.metric("Total Risk Points", points)
-        with col2:
             st.metric("Estimated Risk Percentage", f"{percentage:.1f}%")
-        with col3:
+        with col2:
             if emergency_override or points >= 15:
                 risk_tier = "VERY HIGH"
             elif points >= 10:

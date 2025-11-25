@@ -51,24 +51,6 @@ st.markdown("""
         color: #64748b;
         margin-bottom: 2rem;
     }
-    .clinical-notice {
-        background: linear-gradient(135deg, #dbeafe 0%, #e0f2fe 100%);
-        border-left: 5px solid #3b82f6;
-        padding: 1.5rem;
-        border-radius: 8px;
-        margin: 2rem 0;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    }
-    .clinical-notice h3 {
-        color: #1e40af;
-        margin-top: 0;
-        font-size: 1.2rem;
-    }
-    .clinical-notice p {
-        color: #334155;
-        margin-bottom: 0.5rem;
-        line-height: 1.6;
-    }
     div[data-testid="stMetric"] {
         background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
         padding: 1.5rem;
@@ -85,15 +67,279 @@ st.markdown("""
         color: #1e3a8a !important;
         font-weight: 700 !important;
     }
-    .section-card {
-        background: white;
-        padding: 1.5rem;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-        margin-bottom: 1.5rem;
-    }
 </style>
 """, unsafe_allow_html=True)
+
+# Translations
+TRANSLATIONS = {
+    "English": {
+        "title": "👁️ Retinal Detachment Risk Assessment",
+        "subtitle": "This assessment helps determine how urgently you should see an eye care professional based on your risk factors and symptoms.",
+        "language": "Language:",
+        "section_a": "📋 A) Demographics",
+        "age": "Age (years): *",
+        "age_placeholder": "Enter your age",
+        "sex": "Sex assigned at birth: *",
+        "female": "Female",
+        "male": "Male",
+        "section_b": "👁️ B) Eye History",
+        "prior_rd": "Ever diagnosed with retinal detachment in either eye? *",
+        "cataract": "Cataract surgery in this eye? *",
+        "yag": "Nd:YAG posterior capsulotomy (laser) in this eye? *",
+        "myopia": "Do you wear glasses/contacts for nearsightedness (myopia)? *",
+        "myopia_level": "Approximate prescription: *",
+        "myopia_none": "None",
+        "myopia_mild": "Mild (< -3D)",
+        "myopia_moderate": "Moderate (-3 to -6D)",
+        "myopia_high": "High (≤ -6D)",
+        "dont_know": "Don't know",
+        "retinal_condition": "Any known retinal condition (e.g., lattice degeneration) diagnosed by an eye doctor (this eye)? *",
+        "eye_trauma": "Any prior significant eye trauma to this eye? *",
+        "yes": "Yes",
+        "no": "No",
+        "not_sure": "Not sure",
+        "section_c": "🧬 C) Systemic / Family History",
+        "diabetes": "Do you have diabetes? *",
+        "family_history": "Family history of retinal detachment? *",
+        "section_d": "⚠️ D) Current Symptoms",
+        "floaters": "New floaters in the last few days (this eye)? *",
+        "floaters_onset": "If yes, started: *",
+        "flashes": "Flashes of light in the last few days (this eye)? *",
+        "flashes_none": "None",
+        "flashes_occasional": "Occasional",
+        "flashes_frequent": "Frequent",
+        "flashes_onset": "If occasional/frequent, started: *",
+        "shadow": "Dark shadow/curtain/veil in vision (this eye)? *",
+        "shadow_onset": "If yes, how long ago? *",
+        "vision_decrease": "Sudden decrease in vision (this eye)? *",
+        "vision_onset": "If yes, onset: *",
+        "pain": "New double vision or severe eye pain (this eye)? *",
+        "onset_48h": "Within 48 hours",
+        "onset_more_48h": "More than 48 hours ago",
+        "onset_24h": "Within 24 hours",
+        "onset_more_24h": "More than 24 hours ago",
+        "section_e": "📊 E) Visual Function & Follow-up",
+        "vision_level": "Approximate vision in this eye (without correction): *",
+        "vision_2020": "20/20 or better",
+        "vision_2030": "20/30–20/60",
+        "vision_2080": "20/80–20/200",
+        "vision_worse": "Worse than 20/200",
+        "last_exam": "Date of last dilated eye exam (if known): *",
+        "exam_within_2": "Within 2 years",
+        "exam_more_2": "More than 2 years ago",
+        "exam_never": "Never",
+        "section_f": "🏋️ F) Lifestyle / Recent Triggers",
+        "triggers": "Recent potential triggers in the last 3 months (check all that apply): *",
+        "trigger_trauma": "Heavy head/eye trauma",
+        "trigger_sports": "Contact sports",
+        "trigger_lifting": "Heavy lifting/physical strain immediately before symptoms",
+        "trigger_none": "None",
+        "calculate_btn": "🔍 Calculate My Risk Assessment",
+        "missing_fields": "⚠️ Please complete all required fields (*) before calculating. Missing:",
+        "results_title": "📊 Your Risk Assessment Results",
+        "risk_percentage": "Estimated Risk Percentage",
+        "risk_tier": "Risk Tier",
+        "very_high": "VERY HIGH",
+        "high": "HIGH",
+        "moderate": "MODERATE",
+        "low": "LOW",
+        "very_high_title": "🚨 VERY HIGH RISK - EMERGENCY ACTION REQUIRED",
+        "very_high_msg": "You are at VERY HIGH RISK for retinal detachment",
+        "very_high_action": "⚠️ SEEK EMERGENCY EYE CARE TODAY (SAME DAY)",
+        "very_high_detail": "Your symptoms and risk factors indicate a potential retinal detachment emergency. Contact an ophthalmologist or go to an emergency room with ophthalmology services immediately. Prompt treatment can prevent permanent vision loss.",
+        "high_title": "⚠️ HIGH RISK - URGENT EVALUATION NEEDED",
+        "high_msg": "You are at HIGH RISK for retinal detachment",
+        "high_action": "📞 URGENT: Schedule evaluation within 24 hours",
+        "high_detail": "Contact an eye care professional today to schedule an urgent examination. Your risk factors warrant prompt attention to prevent potential vision loss.",
+        "moderate_title": "ℹ️ MODERATE RISK - SCHEDULE APPOINTMENT SOON",
+        "moderate_msg": "You are at MODERATE RISK for retinal detachment",
+        "moderate_action": "📅 Schedule eye exam within 1–3 days",
+        "moderate_detail": "While not an emergency, your symptoms warrant timely evaluation. Contact your eye care provider to schedule an appointment. Seek care sooner if symptoms worsen.",
+        "low_title": "✅ LOW RISK - MONITOR SYMPTOMS",
+        "low_msg": "You are at LOW RISK for retinal detachment",
+        "low_action": "👁️ Continue monitoring your symptoms",
+        "low_detail": "Your current risk is low. Monitor your vision and seek care if you develop new symptoms such as sudden floaters, flashes of light, or vision changes. Maintain regular eye exams as recommended by your eye care provider.",
+        "important_note": "💡 **Important**: This screening tool helps determine the urgency of eye care based on evidence-based risk factors. Early detection and treatment of retinal detachment can preserve vision and prevent blindness."
+    },
+    "Español": {
+        "title": "👁️ Evaluación del Riesgo de Desprendimiento de Retina",
+        "subtitle": "Esta evaluación ayuda a determinar con qué urgencia debe consultar a un profesional de la salud ocular según sus factores de riesgo y síntomas.",
+        "language": "Idioma:",
+        "section_a": "📋 A) Demografía",
+        "age": "Edad (años): *",
+        "age_placeholder": "Ingrese su edad",
+        "sex": "Sexo asignado al nacer: *",
+        "female": "Femenino",
+        "male": "Masculino",
+        "section_b": "👁️ B) Historia Ocular",
+        "prior_rd": "¿Alguna vez fue diagnosticado con desprendimiento de retina en cualquier ojo? *",
+        "cataract": "¿Cirugía de cataratas en este ojo? *",
+        "yag": "¿Capsulotomía posterior Nd:YAG (láser) en este ojo? *",
+        "myopia": "¿Usa lentes/lentes de contacto para miopía? *",
+        "myopia_level": "Prescripción aproximada: *",
+        "myopia_none": "Ninguna",
+        "myopia_mild": "Leve (< -3D)",
+        "myopia_moderate": "Moderada (-3 a -6D)",
+        "myopia_high": "Alta (≤ -6D)",
+        "dont_know": "No sé",
+        "retinal_condition": "¿Alguna condición retiniana conocida (ej., degeneración lattice) diagnosticada por un oftalmólogo (este ojo)? *",
+        "eye_trauma": "¿Algún trauma ocular significativo previo en este ojo? *",
+        "yes": "Sí",
+        "no": "No",
+        "not_sure": "No estoy seguro/a",
+        "section_c": "🧬 C) Historia Sistémica / Familiar",
+        "diabetes": "¿Tiene diabetes? *",
+        "family_history": "¿Historia familiar de desprendimiento de retina? *",
+        "section_d": "⚠️ D) Síntomas Actuales",
+        "floaters": "¿Nuevas moscas volantes en los últimos días (este ojo)? *",
+        "floaters_onset": "Si es sí, comenzó: *",
+        "flashes": "¿Destellos de luz en los últimos días (este ojo)? *",
+        "flashes_none": "Ninguno",
+        "flashes_occasional": "Ocasionales",
+        "flashes_frequent": "Frecuentes",
+        "flashes_onset": "Si ocasionales/frecuentes, comenzó: *",
+        "shadow": "¿Sombra/cortina/velo oscuro en la visión (este ojo)? *",
+        "shadow_onset": "Si es sí, ¿hace cuánto tiempo? *",
+        "vision_decrease": "¿Disminución repentina de la visión (este ojo)? *",
+        "vision_onset": "Si es sí, inicio: *",
+        "pain": "¿Visión doble nueva o dolor ocular severo (este ojo)? *",
+        "onset_48h": "Dentro de 48 horas",
+        "onset_more_48h": "Hace más de 48 horas",
+        "onset_24h": "Dentro de 24 horas",
+        "onset_more_24h": "Hace más de 24 horas",
+        "section_e": "📊 E) Función Visual y Seguimiento",
+        "vision_level": "Visión aproximada en este ojo (sin corrección): *",
+        "vision_2020": "20/20 o mejor",
+        "vision_2030": "20/30–20/60",
+        "vision_2080": "20/80–20/200",
+        "vision_worse": "Peor que 20/200",
+        "last_exam": "Fecha del último examen ocular con dilatación (si se conoce): *",
+        "exam_within_2": "Dentro de 2 años",
+        "exam_more_2": "Hace más de 2 años",
+        "exam_never": "Nunca",
+        "section_f": "🏋️ F) Estilo de Vida / Desencadenantes Recientes",
+        "triggers": "Desencadenantes potenciales recientes en los últimos 3 meses (marque todos los que apliquen): *",
+        "trigger_trauma": "Trauma fuerte en cabeza/ojos",
+        "trigger_sports": "Deportes de contacto",
+        "trigger_lifting": "Levantamiento pesado/esfuerzo físico inmediatamente antes de los síntomas",
+        "trigger_none": "Ninguno",
+        "calculate_btn": "🔍 Calcular Mi Evaluación de Riesgo",
+        "missing_fields": "⚠️ Por favor complete todos los campos requeridos (*) antes de calcular. Faltan:",
+        "results_title": "📊 Resultados de Su Evaluación de Riesgo",
+        "risk_percentage": "Porcentaje de Riesgo Estimado",
+        "risk_tier": "Nivel de Riesgo",
+        "very_high": "MUY ALTO",
+        "high": "ALTO",
+        "moderate": "MODERADO",
+        "low": "BAJO",
+        "very_high_title": "🚨 RIESGO MUY ALTO - ACCIÓN DE EMERGENCIA REQUERIDA",
+        "very_high_msg": "Usted está en RIESGO MUY ALTO de desprendimiento de retina",
+        "very_high_action": "⚠️ BUSQUE ATENCIÓN OFTALMOLÓGICA DE EMERGENCIA HOY (MISMO DÍA)",
+        "very_high_detail": "Sus síntomas y factores de riesgo indican una posible emergencia de desprendimiento de retina. Contacte a un oftalmólogo o vaya a una sala de emergencias con servicios de oftalmología inmediatamente. El tratamiento rápido puede prevenir la pérdida permanente de la visión.",
+        "high_title": "⚠️ RIESGO ALTO - EVALUACIÓN URGENTE NECESARIA",
+        "high_msg": "Usted está en RIESGO ALTO de desprendimiento de retina",
+        "high_action": "📞 URGENTE: Programe evaluación dentro de 24 horas",
+        "high_detail": "Contacte a un profesional del cuidado ocular hoy para programar un examen urgente. Sus factores de riesgo requieren atención inmediata para prevenir la pérdida potencial de la visión.",
+        "moderate_title": "ℹ️ RIESGO MODERADO - PROGRAME CITA PRONTO",
+        "moderate_msg": "Usted está en RIESGO MODERADO de desprendimiento de retina",
+        "moderate_action": "📅 Programe examen ocular dentro de 1–3 días",
+        "moderate_detail": "Aunque no es una emergencia, sus síntomas requieren evaluación oportuna. Contacte a su proveedor de cuidado ocular para programar una cita. Busque atención antes si los síntomas empeoran.",
+        "low_title": "✅ RIESGO BAJO - MONITOREE SÍNTOMAS",
+        "low_msg": "Usted está en RIESGO BAJO de desprendimiento de retina",
+        "low_action": "👁️ Continúe monitoreando sus síntomas",
+        "low_detail": "Su riesgo actual es bajo. Monitoree su visión y busque atención si desarrolla nuevos síntomas como moscas volantes repentinas, destellos de luz o cambios en la visión. Mantenga exámenes oculares regulares según lo recomendado por su proveedor de cuidado ocular.",
+        "important_note": "💡 **Importante**: Esta herramienta de detección ayuda a determinar la urgencia de la atención ocular basada en factores de riesgo basados en evidencia. La detección y tratamiento tempranos del desprendimiento de retina pueden preservar la visión y prevenir la ceguera."
+    },
+    "हिंदी": {
+        "title": "👁️ रेटिना डिटैचमेंट जोखिम मूल्यांकन",
+        "subtitle": "यह मूल्यांकन आपके जोखिम कारकों और लक्षणों के आधार पर यह निर्धारित करने में मदद करता है कि आपको कितनी जल्दी नेत्र चिकित्सा पेशेवर से मिलना चाहिए।",
+        "language": "भाषा:",
+        "section_a": "📋 A) जनसांख्यिकी",
+        "age": "उम्र (वर्ष): *",
+        "age_placeholder": "अपनी उम्र दर्ज करें",
+        "sex": "जन्म के समय निर्धारित लिंग: *",
+        "female": "महिला",
+        "male": "पुरुष",
+        "section_b": "👁️ B) नेत्र इतिहास",
+        "prior_rd": "क्या कभी किसी भी आंख में रेटिना डिटैचमेंट का निदान हुआ है? *",
+        "cataract": "इस आंख में मोतियाबिंद सर्जरी? *",
+        "yag": "इस आंख में Nd:YAG पोस्टीरियर कैप्सुलोटॉमी (लेज़र)? *",
+        "myopia": "क्या आप निकट दृष्टिदोष (मायोपिया) के लिए चश्मा/कॉन्टैक्ट लेंस पहनते हैं? *",
+        "myopia_level": "अनुमानित प्रिस्क्रिप्शन: *",
+        "myopia_none": "कोई नहीं",
+        "myopia_mild": "हल्का (< -3D)",
+        "myopia_moderate": "मध्यम (-3 से -6D)",
+        "myopia_high": "उच्च (≤ -6D)",
+        "dont_know": "पता नहीं",
+        "retinal_condition": "क्या नेत्र चिकित्सक द्वारा कोई ज्ञात रेटिना स्थिति (जैसे, लैटिस डिजनरेशन) का निदान किया गया है (इस आंख में)? *",
+        "eye_trauma": "इस आंख में कोई पूर्व महत्वपूर्ण आंख का आघात? *",
+        "yes": "हाँ",
+        "no": "नहीं",
+        "not_sure": "निश्चित नहीं",
+        "section_c": "🧬 C) प्रणालीगत / पारिवारिक इतिहास",
+        "diabetes": "क्या आपको मधुमेह है? *",
+        "family_history": "रेटिना डिटैचमेंट का पारिवारिक इतिहास? *",
+        "section_d": "⚠️ D) वर्तमान लक्षण",
+        "floaters": "पिछले कुछ दिनों में नए फ्लोटर्स (इस आंख में)? *",
+        "floaters_onset": "यदि हाँ, शुरू हुआ: *",
+        "flashes": "पिछले कुछ दिनों में प्रकाश की चमक (इस आंख में)? *",
+        "flashes_none": "कोई नहीं",
+        "flashes_occasional": "कभी-कभी",
+        "flashes_frequent": "बार-बार",
+        "flashes_onset": "यदि कभी-कभी/बार-बार, शुरू हुआ: *",
+        "shadow": "दृष्टि में गहरी छाया/पर्दा/घूंघट (इस आंख में)? *",
+        "shadow_onset": "यदि हाँ, कितने समय पहले? *",
+        "vision_decrease": "दृष्टि में अचानक कमी (इस आंख में)? *",
+        "vision_onset": "यदि हाँ, शुरुआत: *",
+        "pain": "नई दोहरी दृष्टि या गंभीर आंख दर्द (इस आंख में)? *",
+        "onset_48h": "48 घंटों के भीतर",
+        "onset_more_48h": "48 घंटे से अधिक समय पहले",
+        "onset_24h": "24 घंटों के भीतर",
+        "onset_more_24h": "24 घंटे से अधिक समय पहले",
+        "section_e": "📊 E) दृश्य कार्य और फॉलो-अप",
+        "vision_level": "इस आंख में अनुमानित दृष्टि (सुधार के बिना): *",
+        "vision_2020": "20/20 या बेहतर",
+        "vision_2030": "20/30–20/60",
+        "vision_2080": "20/80–20/200",
+        "vision_worse": "20/200 से खराब",
+        "last_exam": "अंतिम डायलेटेड आई परीक्षा की तारीख (यदि ज्ञात हो): *",
+        "exam_within_2": "2 वर्षों के भीतर",
+        "exam_more_2": "2 वर्ष से अधिक पहले",
+        "exam_never": "कभी नहीं",
+        "section_f": "🏋️ F) जीवनशैली / हाल के ट्रिगर्स",
+        "triggers": "पिछले 3 महीनों में हाल के संभावित ट्रिगर्स (सभी लागू चुनें): *",
+        "trigger_trauma": "सिर/आंख में भारी आघात",
+        "trigger_sports": "संपर्क खेल",
+        "trigger_lifting": "लक्षणों से ठीक पहले भारी उठाना/शारीरिक तनाव",
+        "trigger_none": "कोई नहीं",
+        "calculate_btn": "🔍 मेरे जोखिम मूल्यांकन की गणना करें",
+        "missing_fields": "⚠️ कृपया गणना करने से पहले सभी आवश्यक फ़ील्ड (*) भरें। गुम:",
+        "results_title": "📊 आपके जोखिम मूल्यांकन के परिणाम",
+        "risk_percentage": "अनुमानित जोखिम प्रतिशत",
+        "risk_tier": "जोखिम स्तर",
+        "very_high": "बहुत उच्च",
+        "high": "उच्च",
+        "moderate": "मध्यम",
+        "low": "कम",
+        "very_high_title": "🚨 बहुत उच्च जोखिम - आपातकालीन कार्रवाई आवश्यक",
+        "very_high_msg": "आप रेटिना डिटैचमेंट के बहुत उच्च जोखिम में हैं",
+        "very_high_action": "⚠️ आज (उसी दिन) आपातकालीन नेत्र देखभाल प्राप्त करें",
+        "very_high_detail": "आपके लक्षण और जोखिम कारक संभावित रेटिना डिटैचमेंट आपातकाल का संकेत देते हैं। तुरंत एक नेत्र रोग विशेषज्ञ से संपर्क करें या नेत्र विज्ञान सेवाओं वाले आपातकालीन कक्ष में जाएं। त्वरित उपचार स्थायी दृष्टि हानि को रोक सकता है।",
+        "high_title": "⚠️ उच्च जोखिम - तत्काल मूल्यांकन आवश्यक",
+        "high_msg": "आप रेटिना डिटैचमेंट के उच्च जोखिम में हैं",
+        "high_action": "📞 तत्काल: 24 घंटों के भीतर मूल्यांकन निर्धारित करें",
+        "high_detail": "तत्काल परीक्षा निर्धारित करने के लिए आज ही एक नेत्र देखभाल पेशेवर से संपर्क करें। आपके जोखिम कारक संभावित दृष्टि हानि को रोकने के लिए त्वरित ध्यान की मांग करते हैं।",
+        "moderate_title": "ℹ️ मध्यम जोखिम - जल्द ही नियुक्ति निर्धारित करें",
+        "moderate_msg": "आप रेटिना डिटैचमेंट के मध्यम जोखिम में हैं",
+        "moderate_action": "📅 1–3 दिनों के भीतर आंखों की जांच निर्धारित करें",
+        "moderate_detail": "हालांकि यह आपातकाल नहीं है, आपके लक्षण समय पर मूल्यांकन की आवश्यकता रखते हैं। नियुक्ति निर्धारित करने के लिए अपने नेत्र देखभाल प्रदाता से संपर्क करें। यदि लक्षण बिगड़ते हैं तो जल्द ही देखभाल प्राप्त करें।",
+        "low_title": "✅ कम जोखिम - लक्षणों की निगरानी करें",
+        "low_msg": "आप रेटिना डिटैचमेंट के कम जोखिम में हैं",
+        "low_action": "👁️ अपने लक्षणों की निगरानी जारी रखें",
+        "low_detail": "आपका वर्तमान जोखिम कम है। अपनी दृष्टि की निगरानी करें और यदि आप अचानक फ्लोटर्स, प्रकाश की चमक, या दृष्टि में परिवर्तन जैसे नए लक्षण विकसित करते हैं तो देखभाल प्राप्त करें। अपने नेत्र देखभाल प्रदाता द्वारा अनुशंसित नियमित नेत्र परीक्षाएं बनाए रखें।",
+        "important_note": "💡 **महत्वपूर्ण**: यह स्क्रीनिंग उपकरण साक्ष्य-आधारित जोखिम कारकों के आधार पर नेत्र देखभाल की तात्कालिकता निर्धारित करने में मदद करता है। रेटिना डिटैचमेंट का शीघ्र पता लगाना और उपचार दृष्टि को संरक्षित कर सकता है और अंधेपन को रोक सकता है।"
+    }
+}
 
 def calculate_percentage(points):
     """Convert points to percentage risk using interpolation"""
@@ -113,18 +359,25 @@ def calculate_percentage(points):
         return min(90, 85 + (points - 25) * 0.5)
 
 def main():
+    # Language Selector
+    col1, col2, col3 = st.columns([1, 1, 4])
+    with col1:
+        language = st.selectbox("🌐", ["English", "Español", "हिंदी"], label_visibility="collapsed")
+    
+    t = TRANSLATIONS[language]
+    
     # Header
-    st.markdown("# 👁️ Retinal Detachment Risk Assessment")
-    st.markdown('<p class="subtitle">This assessment helps determine how urgently you should see an eye care professional based on your risk factors and symptoms.</p>', unsafe_allow_html=True)
+    st.markdown(f"# {t['title']}")
+    st.markdown(f'<p class="subtitle">{t["subtitle"]}</p>', unsafe_allow_html=True)
     
     points = 0
     emergency_override = False
     
     # Demographics Section
-    st.markdown("## 📋 A) Demographics")
+    st.markdown(f"## {t['section_a']}")
     col1, col2 = st.columns(2)
     with col1:
-        age = st.number_input("Age (years): *", min_value=0, max_value=120, value=None, step=1, placeholder="Enter your age")
+        age = st.number_input(t["age"], min_value=0, max_value=120, value=None, step=1, placeholder=t["age_placeholder"])
         if age is not None:
             if age >= 70:
                 points += 3
@@ -133,273 +386,266 @@ def main():
             elif age >= 40:
                 points += 1
     with col2:
-        sex = st.radio("Sex assigned at birth: *", ["Female", "Male"], index=None)
-        if sex == "Male":
+        sex = st.radio(t["sex"], [t["female"], t["male"]], index=None)
+        if sex == t["male"]:
             points += 1
     
     # Eye History Section
-    st.markdown("## 👁️ B) Eye History")
+    st.markdown(f"## {t['section_b']}")
     
     col1, col2 = st.columns(2)
     with col1:
-        prior_rd = st.radio("Ever diagnosed with retinal detachment in either eye? *", ["No", "Yes"], index=None)
-        if prior_rd == "Yes":
+        prior_rd = st.radio(t["prior_rd"], [t["no"], t["yes"]], index=None)
+        if prior_rd == t["yes"]:
             points += 5
         
-        cataract = st.radio("Cataract surgery in this eye? *", ["No", "Yes", "Not sure"], index=None)
-        if cataract == "Yes":
+        cataract = st.radio(t["cataract"], [t["no"], t["yes"], t["not_sure"]], index=None)
+        if cataract == t["yes"]:
             points += 2
         
-        yag = st.radio("Nd:YAG posterior capsulotomy (laser) in this eye? *", ["No", "Yes", "Not sure"], index=None)
-        if yag == "Yes":
+        yag = st.radio(t["yag"], [t["no"], t["yes"], t["not_sure"]], index=None)
+        if yag == t["yes"]:
             points += 2
     
     with col2:
-        myopia = st.radio("Do you wear glasses/contacts for nearsightedness (myopia)? *", ["No", "Yes"], index=None)
-        if myopia == "Yes":
-            myopia_level = st.radio("Approximate prescription: *", ["None", "Mild (< -3D)", "Moderate (-3 to -6D)", "High (≤ -6D)", "Don't know"], index=None)
-            if myopia_level == "Mild (< -3D)":
+        myopia = st.radio(t["myopia"], [t["no"], t["yes"]], index=None)
+        if myopia == t["yes"]:
+            myopia_level = st.radio(t["myopia_level"], [t["myopia_none"], t["myopia_mild"], t["myopia_moderate"], t["myopia_high"], t["dont_know"]], index=None)
+            if myopia_level == t["myopia_mild"]:
                 points += 1
-            elif myopia_level == "Moderate (-3 to -6D)":
+            elif myopia_level == t["myopia_moderate"]:
                 points += 2
-            elif myopia_level == "High (≤ -6D)":
+            elif myopia_level == t["myopia_high"]:
                 points += 4
         
-        retinal_condition = st.radio("Any known retinal condition (e.g., lattice degeneration) diagnosed by an eye doctor (this eye)? *", ["No", "Yes", "Not sure"], index=None)
-        if retinal_condition == "Yes":
+        retinal_condition = st.radio(t["retinal_condition"], [t["no"], t["yes"], t["not_sure"]], index=None)
+        if retinal_condition == t["yes"]:
             points += 4
         
-        eye_trauma = st.radio("Any prior significant eye trauma to this eye? *", ["No", "Yes"], index=None)
-        if eye_trauma == "Yes":
+        eye_trauma = st.radio(t["eye_trauma"], [t["no"], t["yes"]], index=None)
+        if eye_trauma == t["yes"]:
             points += 3
     
     # Systemic/Family History Section
-    st.markdown("## 🧬 C) Systemic / Family History")
+    st.markdown(f"## {t['section_c']}")
     col1, col2 = st.columns(2)
     with col1:
-        diabetes = st.radio("Do you have diabetes? *", ["No", "Yes", "Not sure"], index=None)
-        if diabetes == "Yes":
+        diabetes = st.radio(t["diabetes"], [t["no"], t["yes"], t["not_sure"]], index=None)
+        if diabetes == t["yes"]:
             points += 1
     with col2:
-        family_history = st.radio("Family history of retinal detachment? *", ["No", "Yes", "Not sure"], index=None)
-        if family_history == "Yes":
+        family_history = st.radio(t["family_history"], [t["no"], t["yes"], t["not_sure"]], index=None)
+        if family_history == t["yes"]:
             points += 3
     
     # Current Symptoms Section
-    st.markdown("## ⚠️ D) Current Symptoms")
+    st.markdown(f"## {t['section_d']}")
     
     col1, col2 = st.columns(2)
     with col1:
-        floaters = st.radio("New floaters in the last few days (this eye)? *", ["No", "Yes"], index=None)
-        if floaters == "Yes":
+        floaters = st.radio(t["floaters"], [t["no"], t["yes"]], index=None)
+        if floaters == t["yes"]:
             points += 3
-            floaters_onset = st.radio("If yes, started: *", ["More than 48 hours ago", "Within 48 hours"], key="floaters_onset", index=None)
-            if floaters_onset == "Within 48 hours":
+            floaters_onset = st.radio(t["floaters_onset"], [t["onset_more_48h"], t["onset_48h"]], key="floaters_onset", index=None)
+            if floaters_onset == t["onset_48h"]:
                 points += 1
         
-        flashes = st.radio("Flashes of light in the last few days (this eye)? *", ["None", "Occasional", "Frequent"], index=None)
-        if flashes == "Occasional":
+        flashes = st.radio(t["flashes"], [t["flashes_none"], t["flashes_occasional"], t["flashes_frequent"]], index=None)
+        if flashes == t["flashes_occasional"]:
             points += 2
-            flashes_onset = st.radio("If occasional/frequent, started: *", ["More than 48 hours ago", "Within 48 hours"], key="flashes_onset", index=None)
-            if flashes_onset == "Within 48 hours":
+            flashes_onset = st.radio(t["flashes_onset"], [t["onset_more_48h"], t["onset_48h"]], key="flashes_onset", index=None)
+            if flashes_onset == t["onset_48h"]:
                 points += 1
-        elif flashes == "Frequent":
+        elif flashes == t["flashes_frequent"]:
             points += 3
-            flashes_onset = st.radio("If occasional/frequent, started: *", ["More than 48 hours ago", "Within 48 hours"], key="flashes_onset2", index=None)
-            if flashes_onset == "Within 48 hours":
+            flashes_onset = st.radio(t["flashes_onset"], [t["onset_more_48h"], t["onset_48h"]], key="flashes_onset2", index=None)
+            if flashes_onset == t["onset_48h"]:
                 points += 1
         
-        shadow = st.radio("Dark shadow/curtain/veil in vision (this eye)? *", ["No", "Yes"], index=None)
-        if shadow == "Yes":
+        shadow = st.radio(t["shadow"], [t["no"], t["yes"]], index=None)
+        if shadow == t["yes"]:
             points += 8
-            shadow_onset = st.radio("If yes, how long ago? *", ["More than 24 hours ago", "Within 24 hours"], key="shadow_onset", index=None)
-            if shadow_onset == "Within 24 hours":
+            shadow_onset = st.radio(t["shadow_onset"], [t["onset_more_24h"], t["onset_24h"]], key="shadow_onset", index=None)
+            if shadow_onset == t["onset_24h"]:
                 points += 2
                 emergency_override = True
     
     with col2:
-        vision_decrease = st.radio("Sudden decrease in vision (this eye)? *", ["No", "Yes"], index=None)
-        if vision_decrease == "Yes":
+        vision_decrease = st.radio(t["vision_decrease"], [t["no"], t["yes"]], index=None)
+        if vision_decrease == t["yes"]:
             points += 5
-            vision_onset = st.radio("If yes, onset: *", ["More than 24 hours ago", "Within 24 hours"], key="vision_onset", index=None)
-            if vision_onset == "Within 24 hours":
+            vision_onset = st.radio(t["vision_onset"], [t["onset_more_24h"], t["onset_24h"]], key="vision_onset", index=None)
+            if vision_onset == t["onset_24h"]:
                 points += 2
                 emergency_override = True
         
-        pain = st.radio("New double vision or severe eye pain (this eye)? *", ["No", "Yes"], index=None)
-        if pain == "Yes":
+        pain = st.radio(t["pain"], [t["no"], t["yes"]], index=None)
+        if pain == t["yes"]:
             points += 1
     
     # Visual Function Section
-    st.markdown("## 📊 E) Visual Function & Follow-up")
+    st.markdown(f"## {t['section_e']}")
     col1, col2 = st.columns(2)
     with col1:
-        vision_level = st.radio("Approximate vision in this eye (without correction): *", 
-                               ["20/20 or better", "20/30–20/60", "20/80–20/200", "Worse than 20/200", "Don't know"], index=None)
-        if vision_level == "20/30–20/60":
+        vision_level = st.radio(t["vision_level"], 
+                               [t["vision_2020"], t["vision_2030"], t["vision_2080"], t["vision_worse"], t["dont_know"]], index=None)
+        if vision_level == t["vision_2030"]:
             points += 1
-        elif vision_level == "20/80–20/200":
+        elif vision_level == t["vision_2080"]:
             points += 2
-        elif vision_level == "Worse than 20/200":
+        elif vision_level == t["vision_worse"]:
             points += 3
     with col2:
-        last_exam = st.radio("Date of last dilated eye exam (if known): *", 
-                            ["Within 2 years", "More than 2 years ago", "Never"], index=None)
-        if last_exam == "More than 2 years ago":
+        last_exam = st.radio(t["last_exam"], 
+                            [t["exam_within_2"], t["exam_more_2"], t["exam_never"]], index=None)
+        if last_exam == t["exam_more_2"]:
             points += 1
-        elif last_exam == "Never":
+        elif last_exam == t["exam_never"]:
             points += 2
     
     # Lifestyle/Triggers Section
-    st.markdown("## 🏋️ F) Lifestyle / Recent Triggers")
-    recent_triggers = st.multiselect("Recent potential triggers in the last 3 months (check all that apply): *", 
-                                     ["Heavy head/eye trauma", "Contact sports", 
-                                      "Heavy lifting/physical strain immediately before symptoms", 
-                                      "None", "Not sure"])
-    if "Heavy head/eye trauma" in recent_triggers or "Contact sports" in recent_triggers:
+    st.markdown(f"## {t['section_f']}")
+    recent_triggers = st.multiselect(t["triggers"], 
+                                     [t["trigger_trauma"], t["trigger_sports"], 
+                                      t["trigger_lifting"], 
+                                      t["trigger_none"], t["not_sure"]])
+    if t["trigger_trauma"] in recent_triggers or t["trigger_sports"] in recent_triggers:
         points += 3
-    if "Heavy lifting/physical strain immediately before symptoms" in recent_triggers:
+    if t["trigger_lifting"] in recent_triggers:
         points += 1
     
     # Calculate Button
     st.markdown("<br>", unsafe_allow_html=True)
     
-    # Validation - check if all required fields are filled
+    # Validation
     missing_fields = []
     if age is None:
-        missing_fields.append("Age")
+        missing_fields.append(t["age"].replace(": *", ""))
     if sex is None:
-        missing_fields.append("Sex assigned at birth")
+        missing_fields.append(t["sex"].replace(": *", ""))
     if prior_rd is None:
-        missing_fields.append("Prior retinal detachment")
+        missing_fields.append(t["prior_rd"].replace("? *", ""))
     if cataract is None:
-        missing_fields.append("Cataract surgery")
+        missing_fields.append(t["cataract"].replace("? *", ""))
     if yag is None:
-        missing_fields.append("Nd:YAG capsulotomy")
+        missing_fields.append(t["yag"].replace("? *", ""))
     if myopia is None:
-        missing_fields.append("Myopia")
-    if myopia == "Yes" and myopia_level is None:
-        missing_fields.append("Myopia prescription level")
+        missing_fields.append(t["myopia"].replace("? *", ""))
+    if myopia == t["yes"] and myopia_level is None:
+        missing_fields.append(t["myopia_level"].replace(": *", ""))
     if retinal_condition is None:
-        missing_fields.append("Known retinal condition")
+        missing_fields.append(t["retinal_condition"].replace("? *", ""))
     if eye_trauma is None:
-        missing_fields.append("Prior eye trauma")
+        missing_fields.append(t["eye_trauma"].replace("? *", ""))
     if diabetes is None:
-        missing_fields.append("Diabetes")
+        missing_fields.append(t["diabetes"].replace("? *", ""))
     if family_history is None:
-        missing_fields.append("Family history of retinal detachment")
+        missing_fields.append(t["family_history"].replace("? *", ""))
     if floaters is None:
-        missing_fields.append("New floaters")
-    if floaters == "Yes" and floaters_onset is None:
-        missing_fields.append("Floaters onset timing")
+        missing_fields.append(t["floaters"].replace("? *", ""))
+    if floaters == t["yes"] and floaters_onset is None:
+        missing_fields.append(t["floaters_onset"].replace(": *", ""))
     if flashes is None:
-        missing_fields.append("Flashes of light")
-    if flashes in ["Occasional", "Frequent"] and flashes_onset is None:
-        missing_fields.append("Flashes onset timing")
+        missing_fields.append(t["flashes"].replace("? *", ""))
+    if flashes in [t["flashes_occasional"], t["flashes_frequent"]] and flashes_onset is None:
+        missing_fields.append(t["flashes_onset"].replace(": *", ""))
     if shadow is None:
-        missing_fields.append("Dark shadow/curtain/veil")
-    if shadow == "Yes" and shadow_onset is None:
-        missing_fields.append("Shadow onset timing")
+        missing_fields.append(t["shadow"].replace("? *", ""))
+    if shadow == t["yes"] and shadow_onset is None:
+        missing_fields.append(t["shadow_onset"].replace("? *", ""))
     if vision_decrease is None:
-        missing_fields.append("Sudden decrease in vision")
-    if vision_decrease == "Yes" and vision_onset is None:
-        missing_fields.append("Vision decrease onset timing")
+        missing_fields.append(t["vision_decrease"].replace("? *", ""))
+    if vision_decrease == t["yes"] and vision_onset is None:
+        missing_fields.append(t["vision_onset"].replace(": *", ""))
     if pain is None:
-        missing_fields.append("Double vision or eye pain")
+        missing_fields.append(t["pain"].replace("? *", ""))
     if vision_level is None:
-        missing_fields.append("Approximate vision")
+        missing_fields.append(t["vision_level"].replace(": *", ""))
     if last_exam is None:
-        missing_fields.append("Date of last dilated eye exam")
+        missing_fields.append(t["last_exam"].replace(": *", ""))
     if len(recent_triggers) == 0:
-        missing_fields.append("Recent potential triggers")
+        missing_fields.append(t["triggers"].replace(": *", ""))
     
-    @st.dialog("📊 Your Risk Assessment Results", width="large")
+    @st.dialog(t["results_title"], width="large")
     def show_results(points, percentage, emergency_override):
         # Metrics
         col1, col2 = st.columns([1, 1])
         with col1:
-            st.metric("Estimated Risk Percentage", f"{percentage:.1f}%")
+            st.metric(t["risk_percentage"], f"{percentage:.1f}%")
         with col2:
             if emergency_override or points >= 15:
-                risk_tier = "VERY HIGH"
+                risk_tier = t["very_high"]
             elif points >= 10:
-                risk_tier = "HIGH"
+                risk_tier = t["high"]
             elif points >= 5:
-                risk_tier = "MODERATE"
+                risk_tier = t["moderate"]
             else:
-                risk_tier = "LOW"
-            st.metric("Risk Tier", risk_tier)
+                risk_tier = t["low"]
+            st.metric(t["risk_tier"], risk_tier)
         
         st.markdown("<br>", unsafe_allow_html=True)
         
         # Risk Assessment and Recommendations
         if emergency_override or points >= 15:
-            st.error("### 🚨 VERY HIGH RISK - EMERGENCY ACTION REQUIRED")
-            st.markdown("""
+            st.error(f"### {t['very_high_title']}")
+            st.markdown(f"""
             <div style='background-color: #fee2e2; padding: 1.5rem; border-radius: 8px; border-left: 5px solid #dc2626;'>
-                <h4 style='color: #991b1b; margin-top: 0;'>You are at VERY HIGH RISK for retinal detachment</h4>
+                <h4 style='color: #991b1b; margin-top: 0;'>{t['very_high_msg']}</h4>
                 <p style='color: #7f1d1d; font-size: 1.1rem; font-weight: 600;'>
-                ⚠️ SEEK EMERGENCY EYE CARE TODAY (SAME DAY)
+                {t['very_high_action']}
                 </p>
                 <p style='color: #7f1d1d;'>
-                Your symptoms and risk factors indicate a potential retinal detachment emergency. 
-                Contact an ophthalmologist or go to an emergency room with ophthalmology services immediately. 
-                Prompt treatment can prevent permanent vision loss.
+                {t['very_high_detail']}
                 </p>
             </div>
             """, unsafe_allow_html=True)
         elif points >= 10:
-            st.warning("### ⚠️ HIGH RISK - URGENT EVALUATION NEEDED")
+            st.warning(f"### {t['high_title']}")
             st.markdown(f"""
             <div style='background-color: #fef3c7; padding: 1.5rem; border-radius: 8px; border-left: 5px solid #f59e0b;'>
-                <h4 style='color: #92400e; margin-top: 0;'>You are at HIGH RISK for retinal detachment ({percentage:.1f}%)</h4>
+                <h4 style='color: #92400e; margin-top: 0;'>{t['high_msg']} ({percentage:.1f}%)</h4>
                 <p style='color: #78350f; font-size: 1.1rem; font-weight: 600;'>
-                📞 URGENT: Schedule evaluation within 24 hours
+                {t['high_action']}
                 </p>
                 <p style='color: #78350f;'>
-                Contact an eye care professional today to schedule an urgent examination. 
-                Your risk factors warrant prompt attention to prevent potential vision loss.
+                {t['high_detail']}
                 </p>
             </div>
             """, unsafe_allow_html=True)
         elif points >= 5:
-            st.info("### ℹ️ MODERATE RISK - SCHEDULE APPOINTMENT SOON")
+            st.info(f"### {t['moderate_title']}")
             st.markdown(f"""
             <div style='background-color: #dbeafe; padding: 1.5rem; border-radius: 8px; border-left: 5px solid #3b82f6;'>
-                <h4 style='color: #1e40af; margin-top: 0;'>You are at MODERATE RISK for retinal detachment ({percentage:.1f}%)</h4>
+                <h4 style='color: #1e40af; margin-top: 0;'>{t['moderate_msg']} ({percentage:.1f}%)</h4>
                 <p style='color: #1e3a8a; font-size: 1.1rem; font-weight: 600;'>
-                📅 Schedule eye exam within 1–3 days
+                {t['moderate_action']}
                 </p>
                 <p style='color: #1e3a8a;'>
-                While not an emergency, your symptoms warrant timely evaluation. 
-                Contact your eye care provider to schedule an appointment. 
-                Seek care sooner if symptoms worsen.
+                {t['moderate_detail']}
                 </p>
             </div>
             """, unsafe_allow_html=True)
         else:
-            st.success("### ✅ LOW RISK - MONITOR SYMPTOMS")
+            st.success(f"### {t['low_title']}")
             st.markdown(f"""
             <div style='background-color: #d1fae5; padding: 1.5rem; border-radius: 8px; border-left: 5px solid #10b981;'>
-                <h4 style='color: #065f46; margin-top: 0;'>You are at LOW RISK for retinal detachment ({percentage:.1f}%)</h4>
+                <h4 style='color: #065f46; margin-top: 0;'>{t['low_msg']} ({percentage:.1f}%)</h4>
                 <p style='color: #064e3b; font-size: 1.1rem; font-weight: 600;'>
-                👁️ Continue monitoring your symptoms
+                {t['low_action']}
                 </p>
                 <p style='color: #064e3b;'>
-                Your current risk is low. Monitor your vision and seek care if you develop new symptoms 
-                such as sudden floaters, flashes of light, or vision changes. 
-                Maintain regular eye exams as recommended by your eye care provider.
+                {t['low_detail']}
                 </p>
             </div>
             """, unsafe_allow_html=True)
         
         # Important Note
         st.markdown("<br>", unsafe_allow_html=True)
-        st.info("💡 **Important**: This screening tool helps determine the urgency of eye care based on evidence-based risk factors. Early detection and treatment of retinal detachment can preserve vision and prevent blindness.")
+        st.info(t["important_note"])
     
-    if st.button("🔍 Calculate My Risk Assessment", type="primary"):
+    if st.button(t["calculate_btn"], type="primary"):
         if missing_fields:
-            st.error(f"⚠️ Please complete all required fields (*) before calculating. Missing: {', '.join(missing_fields)}")
+            st.error(f"{t['missing_fields']} {', '.join(missing_fields)}")
         else:
             percentage = calculate_percentage(points)
             show_results(points, percentage, emergency_override)

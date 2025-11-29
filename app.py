@@ -423,10 +423,18 @@ def calculate_percentage(points):
         return min(90, 85 + (points - 25) * 0.5)
 
 def main():
+    # Check for reset flag and clear all form state
+    if st.session_state.get("reset_form", False):
+        keys_to_keep = set()  # Keep nothing, clear everything
+        for key in list(st.session_state.keys()):
+            if key != "reset_form":
+                del st.session_state[key]
+        st.session_state["reset_form"] = False
+    
     # Language Selector
     col1, col2, col3 = st.columns([1, 1, 4])
     with col1:
-        language = st.selectbox("🌐", ["English", "Español", "हिंदी"], label_visibility="collapsed")
+        language = st.selectbox("🌐", ["English", "Español", "हिंदी"], label_visibility="collapsed", key="language_select")
     
     t = TRANSLATIONS[language]
     
@@ -710,9 +718,8 @@ def main():
         # Reset button
         st.markdown("<br>", unsafe_allow_html=True)
         if st.button(t["reset_btn"], type="secondary", use_container_width=True):
-            # Clear all session state to reset the form
-            for key in list(st.session_state.keys()):
-                del st.session_state[key]
+            # Set reset flag and rerun to clear form
+            st.session_state["reset_form"] = True
             st.rerun()
     
     if st.button(t["calculate_btn"], type="primary"):

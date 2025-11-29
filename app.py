@@ -423,18 +423,22 @@ def calculate_percentage(points):
         return min(90, 85 + (points - 25) * 0.5)
 
 def main():
-    # Check for reset flag and clear all form state
+    # Initialize form version for reset functionality
+    if "form_version" not in st.session_state:
+        st.session_state.form_version = 0
+    
+    # Check for reset flag and increment form version to reset all widgets
     if st.session_state.get("reset_form", False):
-        keys_to_keep = set()  # Keep nothing, clear everything
-        for key in list(st.session_state.keys()):
-            if key != "reset_form":
-                del st.session_state[key]
-        st.session_state["reset_form"] = False
+        st.session_state.form_version += 1
+        st.session_state.reset_form = False
+    
+    # Create a key prefix based on form version - this resets all widgets when version changes
+    v = st.session_state.form_version
     
     # Language Selector
     col1, col2, col3 = st.columns([1, 1, 4])
     with col1:
-        language = st.selectbox("🌐", ["English", "Español", "हिंदी"], label_visibility="collapsed", key="language_select")
+        language = st.selectbox("🌐", ["English", "Español", "हिंदी"], label_visibility="collapsed", key=f"language_select_{v}")
     
     t = TRANSLATIONS[language]
     
@@ -449,7 +453,7 @@ def main():
     st.markdown(f"## {t['section_a']}")
     col1, col2 = st.columns(2)
     with col1:
-        age = st.number_input(t["age"], min_value=0, max_value=120, value=None, step=1, placeholder=t["age_placeholder"])
+        age = st.number_input(t["age"], min_value=0, max_value=120, value=None, step=1, placeholder=t["age_placeholder"], key=f"age_{v}")
         if age is not None:
             if age >= 70:
                 points += 3
@@ -458,7 +462,7 @@ def main():
             elif age >= 40:
                 points += 1
     with col2:
-        sex = st.radio(t["sex"], [t["female"], t["male"]], index=None)
+        sex = st.radio(t["sex"], [t["female"], t["male"]], index=None, key=f"sex_{v}")
         if sex == t["male"]:
             points += 1
     
@@ -467,22 +471,22 @@ def main():
     
     col1, col2 = st.columns(2)
     with col1:
-        prior_rd = st.radio(t["prior_rd"], [t["no"], t["yes"]], index=None)
+        prior_rd = st.radio(t["prior_rd"], [t["no"], t["yes"]], index=None, key=f"prior_rd_{v}")
         if prior_rd == t["yes"]:
             points += 5
         
-        cataract = st.radio(t["cataract"], [t["no"], t["yes"], t["not_sure"]], index=None)
+        cataract = st.radio(t["cataract"], [t["no"], t["yes"], t["not_sure"]], index=None, key=f"cataract_{v}")
         if cataract == t["yes"]:
             points += 2
         
-        yag = st.radio(t["yag"], [t["no"], t["yes"], t["not_sure"]], index=None)
+        yag = st.radio(t["yag"], [t["no"], t["yes"], t["not_sure"]], index=None, key=f"yag_{v}")
         if yag == t["yes"]:
             points += 2
     
     with col2:
-        myopia = st.radio(t["myopia"], [t["no"], t["yes"]], index=None)
+        myopia = st.radio(t["myopia"], [t["no"], t["yes"]], index=None, key=f"myopia_{v}")
         if myopia == t["yes"]:
-            myopia_level = st.radio(t["myopia_level"], [t["myopia_none"], t["myopia_mild"], t["myopia_moderate"], t["myopia_high"], t["dont_know"]], index=None)
+            myopia_level = st.radio(t["myopia_level"], [t["myopia_none"], t["myopia_mild"], t["myopia_moderate"], t["myopia_high"], t["dont_know"]], index=None, key=f"myopia_level_{v}")
             if myopia_level == t["myopia_mild"]:
                 points += 1
             elif myopia_level == t["myopia_moderate"]:
@@ -490,11 +494,11 @@ def main():
             elif myopia_level == t["myopia_high"]:
                 points += 4
         
-        retinal_condition = st.radio(t["retinal_condition"], [t["no"], t["yes"], t["not_sure"]], index=None)
+        retinal_condition = st.radio(t["retinal_condition"], [t["no"], t["yes"], t["not_sure"]], index=None, key=f"retinal_condition_{v}")
         if retinal_condition == t["yes"]:
             points += 4
         
-        eye_trauma = st.radio(t["eye_trauma"], [t["no"], t["yes"]], index=None)
+        eye_trauma = st.radio(t["eye_trauma"], [t["no"], t["yes"]], index=None, key=f"eye_trauma_{v}")
         if eye_trauma == t["yes"]:
             points += 3
     
@@ -502,11 +506,11 @@ def main():
     st.markdown(f"## {t['section_c']}")
     col1, col2 = st.columns(2)
     with col1:
-        diabetes = st.radio(t["diabetes"], [t["no"], t["yes"], t["not_sure"]], index=None)
+        diabetes = st.radio(t["diabetes"], [t["no"], t["yes"], t["not_sure"]], index=None, key=f"diabetes_{v}")
         if diabetes == t["yes"]:
             points += 1
     with col2:
-        family_history = st.radio(t["family_history"], [t["no"], t["yes"], t["not_sure"]], index=None)
+        family_history = st.radio(t["family_history"], [t["no"], t["yes"], t["not_sure"]], index=None, key=f"family_history_{v}")
         if family_history == t["yes"]:
             points += 3
     
@@ -515,43 +519,43 @@ def main():
     
     col1, col2 = st.columns(2)
     with col1:
-        floaters = st.radio(t["floaters"], [t["no"], t["yes"]], index=None)
+        floaters = st.radio(t["floaters"], [t["no"], t["yes"]], index=None, key=f"floaters_{v}")
         if floaters == t["yes"]:
             points += 3
-            floaters_onset = st.radio(t["floaters_onset"], [t["onset_more_48h"], t["onset_48h"]], key="floaters_onset", index=None)
+            floaters_onset = st.radio(t["floaters_onset"], [t["onset_more_48h"], t["onset_48h"]], key=f"floaters_onset_{v}", index=None)
             if floaters_onset == t["onset_48h"]:
                 points += 1
         
-        flashes = st.radio(t["flashes"], [t["flashes_none"], t["flashes_occasional"], t["flashes_frequent"]], index=None)
+        flashes = st.radio(t["flashes"], [t["flashes_none"], t["flashes_occasional"], t["flashes_frequent"]], index=None, key=f"flashes_{v}")
         if flashes == t["flashes_occasional"]:
             points += 2
-            flashes_onset = st.radio(t["flashes_onset"], [t["onset_more_48h"], t["onset_48h"]], key="flashes_onset", index=None)
+            flashes_onset = st.radio(t["flashes_onset"], [t["onset_more_48h"], t["onset_48h"]], key=f"flashes_onset_{v}", index=None)
             if flashes_onset == t["onset_48h"]:
                 points += 1
         elif flashes == t["flashes_frequent"]:
             points += 3
-            flashes_onset = st.radio(t["flashes_onset"], [t["onset_more_48h"], t["onset_48h"]], key="flashes_onset2", index=None)
+            flashes_onset = st.radio(t["flashes_onset"], [t["onset_more_48h"], t["onset_48h"]], key=f"flashes_onset2_{v}", index=None)
             if flashes_onset == t["onset_48h"]:
                 points += 1
         
-        shadow = st.radio(t["shadow"], [t["no"], t["yes"]], index=None)
+        shadow = st.radio(t["shadow"], [t["no"], t["yes"]], index=None, key=f"shadow_{v}")
         if shadow == t["yes"]:
             points += 8
-            shadow_onset = st.radio(t["shadow_onset"], [t["onset_more_24h"], t["onset_24h"]], key="shadow_onset", index=None)
+            shadow_onset = st.radio(t["shadow_onset"], [t["onset_more_24h"], t["onset_24h"]], key=f"shadow_onset_{v}", index=None)
             if shadow_onset == t["onset_24h"]:
                 points += 2
                 emergency_override = True
     
     with col2:
-        vision_decrease = st.radio(t["vision_decrease"], [t["no"], t["yes"]], index=None)
+        vision_decrease = st.radio(t["vision_decrease"], [t["no"], t["yes"]], index=None, key=f"vision_decrease_{v}")
         if vision_decrease == t["yes"]:
             points += 5
-            vision_onset = st.radio(t["vision_onset"], [t["onset_more_24h"], t["onset_24h"]], key="vision_onset", index=None)
+            vision_onset = st.radio(t["vision_onset"], [t["onset_more_24h"], t["onset_24h"]], key=f"vision_onset_{v}", index=None)
             if vision_onset == t["onset_24h"]:
                 points += 2
                 emergency_override = True
         
-        pain = st.radio(t["pain"], [t["no"], t["yes"]], index=None)
+        pain = st.radio(t["pain"], [t["no"], t["yes"]], index=None, key=f"pain_{v}")
         if pain == t["yes"]:
             points += 1
     
@@ -560,7 +564,7 @@ def main():
     col1, col2 = st.columns(2)
     with col1:
         vision_level = st.radio(t["vision_level"], 
-                               [t["vision_2020"], t["vision_2030"], t["vision_2080"], t["vision_worse"], t["dont_know"]], index=None)
+                               [t["vision_2020"], t["vision_2030"], t["vision_2080"], t["vision_worse"], t["dont_know"]], index=None, key=f"vision_level_{v}")
         if vision_level == t["vision_2030"]:
             points += 1
         elif vision_level == t["vision_2080"]:
@@ -569,7 +573,7 @@ def main():
             points += 3
     with col2:
         last_exam = st.radio(t["last_exam"], 
-                            [t["exam_within_2"], t["exam_more_2"], t["exam_never"]], index=None)
+                            [t["exam_within_2"], t["exam_more_2"], t["exam_never"]], index=None, key=f"last_exam_{v}")
         if last_exam == t["exam_more_2"]:
             points += 1
         elif last_exam == t["exam_never"]:
@@ -580,7 +584,7 @@ def main():
     recent_triggers = st.multiselect(t["triggers"], 
                                      [t["trigger_trauma"], t["trigger_sports"], 
                                       t["trigger_lifting"], 
-                                      t["trigger_none"], t["not_sure"]])
+                                      t["trigger_none"], t["not_sure"]], key=f"triggers_{v}")
     if t["trigger_trauma"] in recent_triggers or t["trigger_sports"] in recent_triggers:
         points += 3
     if t["trigger_lifting"] in recent_triggers:

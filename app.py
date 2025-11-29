@@ -199,7 +199,7 @@ TRANSLATIONS = {
         "reset_btn": "🔄 Start New Assessment",
         "missing_fields": "⚠️ Please complete all required fields (*) before calculating. Missing:",
         "results_title": "Your Risk Assessment Results",
-        "disclaimer": "This tool is for educational purposes only and does not constitute medical advice. It is not a substitute for professional medical evaluation, diagnosis, or treatment. Always consult a qualified eye care professional for any concerns about your vision or eye health.",
+        "disclaimer": "This retinal detachment risk screener provides guidance on how urgently you should seek an eye care evaluation based on your responses. It does not establish a diagnosis or replace an examination by an eye care professional. The recommendations may not account for all individual medical factors. If you are experiencing new or worsening symptoms, contact a qualified eye specialist immediately or seek emergency care.",
         "risk_percentage": "Estimated Risk Percentage",
         "risk_tier": "Risk Tier",
         "very_high": "VERY HIGH",
@@ -290,7 +290,7 @@ TRANSLATIONS = {
         "reset_btn": "🔄 Iniciar Nueva Evaluación",
         "missing_fields": "⚠️ Por favor complete todos los campos requeridos (*) antes de calcular. Faltan:",
         "results_title": "Resultados de Su Evaluación de Riesgo",
-        "disclaimer": "Esta herramienta es solo para fines educativos y no constituye consejo médico. No es un sustituto de la evaluación, diagnóstico o tratamiento médico profesional. Siempre consulte a un profesional calificado en cuidado ocular para cualquier inquietud sobre su visión o salud ocular.",
+        "disclaimer": "Este evaluador de riesgo de desprendimiento de retina proporciona orientación sobre la urgencia con la que debe buscar una evaluación de atención ocular según sus respuestas. No establece un diagnóstico ni reemplaza un examen por un profesional de atención ocular. Las recomendaciones pueden no tener en cuenta todos los factores médicos individuales. Si experimenta síntomas nuevos o que empeoran, comuníquese con un especialista ocular calificado inmediatamente o busque atención de emergencia.",
         "risk_percentage": "Porcentaje de Riesgo Estimado",
         "risk_tier": "Nivel de Riesgo",
         "very_high": "MUY ALTO",
@@ -381,7 +381,7 @@ TRANSLATIONS = {
         "reset_btn": "🔄 नया मूल्यांकन शुरू करें",
         "missing_fields": "⚠️ कृपया गणना करने से पहले सभी आवश्यक फ़ील्ड (*) भरें। गुम:",
         "results_title": "आपके जोखिम मूल्यांकन के परिणाम",
-        "disclaimer": "यह उपकरण केवल शैक्षिक उद्देश्यों के लिए है और चिकित्सा सलाह नहीं है। यह पेशेवर चिकित्सा मूल्यांकन, निदान या उपचार का विकल्प नहीं है। अपनी दृष्टि या आंखों के स्वास्थ्य के बारे में किसी भी चिंता के लिए हमेशा एक योग्य नेत्र देखभाल पेशेवर से परामर्श करें।",
+        "disclaimer": "यह रेटिनल डिटैचमेंट जोखिम स्क्रीनर आपकी प्रतिक्रियाओं के आधार पर मार्गदर्शन प्रदान करता है कि आपको कितनी तत्काल नेत्र देखभाल मूल्यांकन लेनी चाहिए। यह निदान स्थापित नहीं करता है या नेत्र देखभाल पेशेवर द्वारा परीक्षा का स्थान नहीं लेता है। सिफारिशें सभी व्यक्तिगत चिकित्सा कारकों को ध्यान में नहीं रख सकती हैं। यदि आप नए या बिगड़ते लक्षणों का अनुभव कर रहे हैं, तो तुरंत किसी योग्य नेत्र विशेषज्ञ से संपर्क करें या आपातकालीन देखभाल लें।",
         "risk_percentage": "अनुमानित जोखिम प्रतिशत",
         "risk_tier": "जोखिम स्तर",
         "very_high": "बहुत उच्च",
@@ -448,6 +448,10 @@ def main():
     # Header
     st.markdown(f"# {t['title']}")
     st.markdown(f'<p class="subtitle">{t["subtitle"]}</p>', unsafe_allow_html=True)
+    
+    # Disclaimer at the beginning of the app
+    st.warning(t["disclaimer"])
+    st.markdown("<br>", unsafe_allow_html=True)
     
     points = 0
     emergency_override = False
@@ -647,10 +651,6 @@ def main():
     
     @st.dialog(t["results_title"], width="large")
     def show_results(points, percentage, emergency_override):
-        # Disclaimer at the top
-        st.warning(t["disclaimer"])
-        st.markdown("<br>", unsafe_allow_html=True)
-        
         # Metrics
         col1, col2 = st.columns([1, 1])
         with col1:

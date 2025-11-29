@@ -198,7 +198,8 @@ TRANSLATIONS = {
         "calculate_btn": "🔍 Calculate My Risk Assessment",
         "reset_btn": "🔄 Start New Assessment",
         "missing_fields": "⚠️ Please complete all required fields (*) before calculating. Missing:",
-        "results_title": "📊 Your Risk Assessment Results",
+        "results_title": "Your Risk Assessment Results",
+        "disclaimer": "This tool is for educational purposes only and does not constitute medical advice. It is not a substitute for professional medical evaluation, diagnosis, or treatment. Always consult a qualified eye care professional for any concerns about your vision or eye health.",
         "risk_percentage": "Estimated Risk Percentage",
         "risk_tier": "Risk Tier",
         "very_high": "VERY HIGH",
@@ -288,7 +289,8 @@ TRANSLATIONS = {
         "calculate_btn": "🔍 Calcular Mi Evaluación de Riesgo",
         "reset_btn": "🔄 Iniciar Nueva Evaluación",
         "missing_fields": "⚠️ Por favor complete todos los campos requeridos (*) antes de calcular. Faltan:",
-        "results_title": "📊 Resultados de Su Evaluación de Riesgo",
+        "results_title": "Resultados de Su Evaluación de Riesgo",
+        "disclaimer": "Esta herramienta es solo para fines educativos y no constituye consejo médico. No es un sustituto de la evaluación, diagnóstico o tratamiento médico profesional. Siempre consulte a un profesional calificado en cuidado ocular para cualquier inquietud sobre su visión o salud ocular.",
         "risk_percentage": "Porcentaje de Riesgo Estimado",
         "risk_tier": "Nivel de Riesgo",
         "very_high": "MUY ALTO",
@@ -378,7 +380,8 @@ TRANSLATIONS = {
         "calculate_btn": "🔍 मेरे जोखिम मूल्यांकन की गणना करें",
         "reset_btn": "🔄 नया मूल्यांकन शुरू करें",
         "missing_fields": "⚠️ कृपया गणना करने से पहले सभी आवश्यक फ़ील्ड (*) भरें। गुम:",
-        "results_title": "📊 आपके जोखिम मूल्यांकन के परिणाम",
+        "results_title": "आपके जोखिम मूल्यांकन के परिणाम",
+        "disclaimer": "यह उपकरण केवल शैक्षिक उद्देश्यों के लिए है और चिकित्सा सलाह नहीं है। यह पेशेवर चिकित्सा मूल्यांकन, निदान या उपचार का विकल्प नहीं है। अपनी दृष्टि या आंखों के स्वास्थ्य के बारे में किसी भी चिंता के लिए हमेशा एक योग्य नेत्र देखभाल पेशेवर से परामर्श करें।",
         "risk_percentage": "अनुमानित जोखिम प्रतिशत",
         "risk_tier": "जोखिम स्तर",
         "very_high": "बहुत उच्च",
@@ -644,6 +647,10 @@ def main():
     
     @st.dialog(t["results_title"], width="large")
     def show_results(points, percentage, emergency_override):
+        # Disclaimer at the top
+        st.warning(t["disclaimer"])
+        st.markdown("<br>", unsafe_allow_html=True)
+        
         # Metrics
         col1, col2 = st.columns([1, 1])
         with col1:

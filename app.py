@@ -1,4 +1,65 @@
 import streamlit as st
+import os
+import psycopg2
+from psycopg2 import sql
+
+# Database functions for view counter
+def get_db_connection():
+    return psycopg2.connect(os.environ.get("DATABASE_URL"))
+
+def init_counter_table():
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS view_counter (
+                id SERIAL PRIMARY KEY,
+                counter_name VARCHAR(50) UNIQUE NOT NULL,
+                count INTEGER DEFAULT 0
+            )
+        """)
+        cur.execute("""
+            INSERT INTO view_counter (counter_name, count) 
+            VALUES ('assessments', 0) 
+            ON CONFLICT (counter_name) DO NOTHING
+        """)
+        conn.commit()
+        cur.close()
+        conn.close()
+    except Exception as e:
+        pass
+
+def increment_counter():
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("""
+            UPDATE view_counter SET count = count + 1 
+            WHERE counter_name = 'assessments'
+            RETURNING count
+        """)
+        result = cur.fetchone()
+        conn.commit()
+        cur.close()
+        conn.close()
+        return result[0] if result else 0
+    except Exception as e:
+        return 0
+
+def get_counter():
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT count FROM view_counter WHERE counter_name = 'assessments'")
+        result = cur.fetchone()
+        cur.close()
+        conn.close()
+        return result[0] if result else 0
+    except Exception as e:
+        return 0
+
+# Initialize counter table on startup
+init_counter_table()
 
 # Page configuration
 st.set_page_config(
@@ -135,6 +196,7 @@ TRANSLATIONS = {
         "trigger_lifting": "Heavy lifting/physical strain immediately before symptoms",
         "trigger_none": "None",
         "calculate_btn": "🔍 Calculate My Risk Assessment",
+        "reset_btn": "🔄 Start New Assessment",
         "missing_fields": "⚠️ Please complete all required fields (*) before calculating. Missing:",
         "results_title": "📊 Your Risk Assessment Results",
         "risk_percentage": "Estimated Risk Percentage",
@@ -224,6 +286,7 @@ TRANSLATIONS = {
         "trigger_lifting": "Levantamiento pesado/esfuerzo físico inmediatamente antes de los síntomas",
         "trigger_none": "Ninguno",
         "calculate_btn": "🔍 Calcular Mi Evaluación de Riesgo",
+        "reset_btn": "🔄 Iniciar Nueva Evaluación",
         "missing_fields": "⚠️ Por favor complete todos los campos requeridos (*) antes de calcular. Faltan:",
         "results_title": "📊 Resultados de Su Evaluación de Riesgo",
         "risk_percentage": "Porcentaje de Riesgo Estimado",
@@ -313,6 +376,7 @@ TRANSLATIONS = {
         "trigger_lifting": "लक्षणों से ठीक पहले भारी उठाना/शारीरिक तनाव",
         "trigger_none": "कोई नहीं",
         "calculate_btn": "🔍 मेरे जोखिम मूल्यांकन की गणना करें",
+        "reset_btn": "🔄 नया मूल्यांकन शुरू करें",
         "missing_fields": "⚠️ कृपया गणना करने से पहले सभी आवश्यक फ़ील्ड (*) भरें। गुम:",
         "results_title": "📊 आपके जोखिम मूल्यांकन के परिणाम",
         "risk_percentage": "अनुमानित जोखिम प्रतिशत",
@@ -642,13 +706,31 @@ def main():
         # Important Note
         st.markdown("<br>", unsafe_allow_html=True)
         st.info(t["important_note"])
+        
+        # Reset button
+        st.markdown("<br>", unsafe_allow_html=True)
+        if st.button(t["reset_btn"], type="secondary", use_container_width=True):
+            # Clear all session state to reset the form
+            for key in list(st.session_state.keys()):
+                del st.session_state[key]
+            st.rerun()
     
     if st.button(t["calculate_btn"], type="primary"):
         if missing_fields:
             st.error(f"{t['missing_fields']} {', '.join(missing_fields)}")
         else:
+            # Increment the assessment counter
+            increment_counter()
             percentage = calculate_percentage(points)
             show_results(points, percentage, emergency_override)
+    
+    # Hidden admin view - only accessible via URL parameter ?admin=retina2024
+    query_params = st.query_params
+    if query_params.get("admin") == "retina2024":
+        st.markdown("---")
+        st.markdown("### 🔐 Admin View (Hidden)")
+        counter_value = get_counter()
+        st.metric("Total Assessments Completed", counter_value)
 
 if __name__ == "__main__":
     main()

@@ -5,13 +5,15 @@ from psycopg2 import sql
 from datetime import datetime
 import requests
 
-# Database functions for view counter
+# Cache database initialization to avoid running on every reload
+@st.cache_resource
 def get_db_connection():
     return psycopg2.connect(os.environ.get("DATABASE_URL"))
 
+@st.cache_resource
 def init_counter_table():
     try:
-        conn = get_db_connection()
+        conn = psycopg2.connect(os.environ.get("DATABASE_URL"))
         cur = conn.cursor()
         cur.execute("""
             CREATE TABLE IF NOT EXISTS view_counter (
@@ -20,7 +22,6 @@ def init_counter_table():
                 count INTEGER DEFAULT 0
             )
         """)
-        # Add both assessments and page_views counters
         cur.execute("""
             INSERT INTO view_counter (counter_name, count) 
             VALUES ('assessments', 0) 
@@ -31,7 +32,6 @@ def init_counter_table():
             VALUES ('page_views', 0) 
             ON CONFLICT (counter_name) DO NOTHING
         """)
-        # Create view log table for detailed tracking
         cur.execute("""
             CREATE TABLE IF NOT EXISTS view_log (
                 id SERIAL PRIMARY KEY,
@@ -42,21 +42,24 @@ def init_counter_table():
         conn.commit()
         cur.close()
         conn.close()
+        return True
     except Exception as e:
-        pass
+        return False
+
 
 def increment_counter(counter_name='assessments'):
     try:
-        conn = get_db_connection()
+        conn = psycopg2.connect(os.environ.get("DATABASE_URL"))
         cur = conn.cursor()
-        cur.execute("""
+        cur.execute(
+            """
             UPDATE view_counter SET count = count + 1 
             WHERE counter_name = %s
             RETURNING count
-        """, (counter_name,))
+        """, (counter_name, ))
         result = cur.fetchone()
-        # Also log the view with timestamp
-        cur.execute("""
+        cur.execute(
+            """
             INSERT INTO view_log (view_type, timestamp) 
             VALUES (%s, %s)
         """, (counter_name, datetime.now()))
@@ -67,19 +70,20 @@ def increment_counter(counter_name='assessments'):
     except Exception as e:
         return 0
 
+
 def get_counter(counter_name='assessments'):
     try:
-        conn = get_db_connection()
+        conn = psycopg2.connect(os.environ.get("DATABASE_URL"))
         cur = conn.cursor()
-        cur.execute(
-            "SELECT count FROM view_counter WHERE counter_name = %s", (counter_name,)
-        )
+        cur.execute("SELECT count FROM view_counter WHERE counter_name = %s",
+                    (counter_name, ))
         result = cur.fetchone()
         cur.close()
         conn.close()
         return result[0] if result else 0
     except Exception as e:
         return 0
+
 
 def send_view_notification():
     """Send email notification when someone views the app"""
@@ -88,30 +92,40 @@ def send_view_notification():
         notify_email = os.environ.get("NOTIFY_EMAIL")
         if not api_key or not notify_email:
             return False
-        
+
         url = "https://api.sendgrid.com/v3/mail/send"
         headers = {
             "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json"
         }
-        
+
         current_views = get_counter('page_views')
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        
+
         data = {
-            "personalizations": [{"to": [{"email": notify_email}]}],
-            "from": {"email": notify_email},
-            "subject": f"Retinal Risk App - New Visitor (Total: {current_views})",
+            "personalizations": [{
+                "to": [{
+                    "email": notify_email
+                }]
+            }],
+            "from": {
+                "email": notify_email
+            },
+            "subject":
+            f"Retinal Risk App - New Visitor (Total: {current_views})",
             "content": [{
-                "type": "text/plain",
-                "value": f"Someone opened the Retinal Detachment Risk Assessment app.\n\nTime: {current_time}\nTotal Page Views: {current_views}"
+                "type":
+                "text/plain",
+                "value":
+                f"Someone opened the Retinal Detachment Risk Assessment app.\n\nTime: {current_time}\nTotal Page Views: {current_views}"
             }]
         }
-        
+
         response = requests.post(url, headers=headers, json=data, timeout=5)
         return response.status_code == 202
     except Exception as e:
         return False
+
 
 # Initialize counter table on startup
 init_counter_table()
@@ -191,7 +205,7 @@ TRANSLATIONS = {
         "title":
         "👁️ Retinal Detachment Risk Assessment",
         "subtitle":
-        "This assessment helps determine how urgently you should see an eye care professional based on your risk factors and symptoms. /n ⚠️ This assessment is not a diagnosis: if you have urgent symptoms, seek prompt eye care.",
+        "This assessment helps determine how urgently you should see an eye care professional based on your risk factors and symptoms.",
         "language":
         "Language:",
         "section_a":
@@ -754,7 +768,7 @@ def main():
         st.session_state.page_view_tracked = True
         increment_counter('page_views')
         send_view_notification()
-    
+
     # Initialize form version for reset functionality
     if "form_version" not in st.session_state:
         st.session_state.form_version = 0
@@ -1153,7 +1167,7 @@ def main():
     if query_params.get("admin") == "retina2024":
         st.markdown("---")
         st.markdown("### Admin Dashboard")
-        
+
         col1, col2 = st.columns(2)
         with col1:
             page_views = get_counter('page_views')
@@ -1161,7 +1175,7 @@ def main():
         with col2:
             assessments = get_counter('assessments')
             st.metric("Assessments Completed", assessments)
-        
+
         # Show detailed view log
         st.markdown("#### View Log (for verification)")
         try:
@@ -1176,23 +1190,24 @@ def main():
             logs = cur.fetchall()
             cur.close()
             conn.close()
-            
+
             if logs:
                 import pandas as pd
                 df = pd.DataFrame(logs, columns=["Type", "Timestamp"])
                 st.dataframe(df, use_container_width=True)
-                
+
                 # Download button for full log
                 cur = get_db_connection().cursor()
-                cur.execute("SELECT view_type, timestamp FROM view_log ORDER BY timestamp DESC")
-                all_logs = cur.fetchall()
-                csv_data = "Type,Timestamp\n" + "\n".join([f"{log[0]},{log[1]}" for log in all_logs])
-                st.download_button(
-                    label="Download Full Log (CSV)",
-                    data=csv_data,
-                    file_name="view_log.csv",
-                    mime="text/csv"
+                cur.execute(
+                    "SELECT view_type, timestamp FROM view_log ORDER BY timestamp DESC"
                 )
+                all_logs = cur.fetchall()
+                csv_data = "Type,Timestamp\n" + "\n".join(
+                    [f"{log[0]},{log[1]}" for log in all_logs])
+                st.download_button(label="Download Full Log (CSV)",
+                                   data=csv_data,
+                                   file_name="view_log.csv",
+                                   mime="text/csv")
             else:
                 st.info("No views recorded yet.")
         except Exception as e:

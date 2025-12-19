@@ -333,7 +333,7 @@ TRANSLATIONS = {
         "results_title":
         "Your Risk Assessment Results",
         "disclaimer":
-        "This retinal detachment risk screener provides guidance on how urgently you should seek an eye care evaluation based on your responses. It does not establish a diagnosis or replace an examination by an eye care professional. The recommendations may not account for all individual medical factors. If you are experiencing new or worsening symptoms, contact a qualified eye specialist immediately or seek emergency care.",
+        "**Disclaimer:** This retinal detachment risk screener provides guidance on how urgently you should seek an eye care evaluation based on your responses. It does not establish a diagnosis or replace an examination by an eye care professional. The recommendations may not account for all individual medical factors. If you are experiencing new or worsening symptoms, contact a qualified eye specialist immediately or seek emergency care.",
         "risk_percentage":
         "Estimated Risk Percentage",
         "risk_tier":
@@ -513,7 +513,7 @@ TRANSLATIONS = {
         "results_title":
         "Resultados de Su Evaluación de Riesgo",
         "disclaimer":
-        "Este evaluador de riesgo de desprendimiento de retina proporciona orientación sobre la urgencia con la que debe buscar una evaluación de atención ocular según sus respuestas. No establece un diagnóstico ni reemplaza un examen por un profesional de atención ocular. Las recomendaciones pueden no tener en cuenta todos los factores médicos individuales. Si experimenta síntomas nuevos o que empeoran, comuníquese con un especialista ocular calificado inmediatamente o busque atención de emergencia.",
+        "**Descargo de responsabilidad:** Este evaluador de riesgo de desprendimiento de retina proporciona orientación sobre la urgencia con la que debe buscar una evaluación de atención ocular según sus respuestas. No establece un diagnóstico ni reemplaza un examen por un profesional de atención ocular. Las recomendaciones pueden no tener en cuenta todos los factores médicos individuales. Si experimenta síntomas nuevos o que empeoran, comuníquese con un especialista ocular calificado inmediatamente o busque atención de emergencia.",
         "risk_percentage":
         "Porcentaje de Riesgo Estimado",
         "risk_tier":
@@ -693,7 +693,7 @@ TRANSLATIONS = {
         "results_title":
         "आपके जोखिम मूल्यांकन के परिणाम",
         "disclaimer":
-        "यह रेटिनल डिटैचमेंट जोखिम स्क्रीनर आपकी प्रतिक्रियाओं के आधार पर मार्गदर्शन प्रदान करता है कि आपको कितनी तत्काल नेत्र देखभाल मूल्यांकन लेनी चाहिए। यह निदान स्थापित नहीं करता है या नेत्र देखभाल पेशेवर द्वारा परीक्षा का स्थान नहीं लेता है। सिफारिशें सभी व्यक्तिगत चिकित्सा कारकों को ध्यान में नहीं रख सकती हैं। यदि आप नए या बिगड़ते लक्षणों का अनुभव कर रहे हैं, तो तुरंत किसी योग्य नेत्र विशेषज्ञ से संपर्क करें या आपातकालीन देखभाल लें।",
+        "**अस्वीकरण:** यह रेटिनल डिटैचमेंट जोखिम स्क्रीनर आपकी प्रतिक्रियाओं के आधार पर मार्गदर्शन प्रदान करता है कि आपको कितनी तत्काल नेत्र देखभाल मूल्यांकन लेनी चाहिए। यह निदान स्थापित नहीं करता है या नेत्र देखभाल पेशेवर द्वारा परीक्षा का स्थान नहीं लेता है। सिफारिशें सभी व्यक्तिगत चिकित्सा कारकों को ध्यान में नहीं रख सकती हैं। यदि आप नए या बिगड़ते लक्षणों का अनुभव कर रहे हैं, तो तुरंत किसी योग्य नेत्र विशेषज्ञ से संपर्क करें या आपातकालीन देखभाल लें।",
         "risk_percentage":
         "अनुमानित जोखिम प्रतिशत",
         "risk_tier":

@@ -203,7 +203,7 @@ st.markdown("""
 TRANSLATIONS = {
     "English": {
         "title":
-        "👁️ Retinal Detachment Risk Assessment",
+        "👁️ Retinal Detachment Risk Awareness",
         "subtitle":
         "This assessment helps determine how urgently you should see an eye care professional based on your risk factors and symptoms.",
         "language":

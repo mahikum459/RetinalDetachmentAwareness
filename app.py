@@ -204,6 +204,8 @@ TRANSLATIONS = {
     "English": {
         "title":
         "👁️ Retinal Detachment Awareness Check",
+        "users":
+        "Users",
         "subtitle":
         "This tool helps determine how urgently you should see an eye care professional based on your risk factors and symptoms.",
         "language":

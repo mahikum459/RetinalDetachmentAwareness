@@ -333,7 +333,7 @@ TRANSLATIONS = {
         "results_title":
         "Your Risk Assessment Results",
         "disclaimer":
-        "**Disclaimer:**This tool provides educational guidance on how urgently to seek an eye care evaluation based on your answers. It does not diagnose retinal detachment and does not replace an exam by an eye care professional. Results may not account for all individual medical factors. If you have new or worsening symptoms (especially flashes, sudden floaters, a curtain/shadow, or sudden vision changes), seek urgent eye care or emergency care.",
+        "**Disclaimer:** This tool provides educational guidance on how urgently to seek an eye care evaluation based on your answers. It does not diagnose retinal detachment and does not replace an exam by an eye care professional. Results may not account for all individual medical factors. If you have new or worsening symptoms (especially flashes, sudden floaters, a curtain/shadow, or sudden vision changes), seek urgent eye care or emergency care.",
         "risk_percentage":
         "Estimated Risk Percentage",
         "risk_tier":

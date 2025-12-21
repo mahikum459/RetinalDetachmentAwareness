@@ -203,9 +203,9 @@ st.markdown("""
 TRANSLATIONS = {
     "English": {
         "title":
-        "👁️ Retinal Detachment Risk Awareness",
+        "👁️ Retinal Detachment Awareness Check",
         "subtitle":
-        "This assessment helps determine how urgently you should see an eye care professional based on your risk factors and symptoms.",
+        "This tool helps determine how urgently you should see an eye care professional based on your risk factors and symptoms.",
         "language":
         "Language:",
         "section_a":

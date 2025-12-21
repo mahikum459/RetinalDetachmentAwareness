@@ -790,6 +790,10 @@ def main():
 
     t = TRANSLATIONS[language]
 
+    # Display user count at the top
+    user_count = get_counter('page_views')
+    st.markdown(f"<div style='text-align: right; color: #64748b; font-size: 0.9rem; margin-bottom: 0.5rem;'>👥 Users: <strong>{user_count:,}</strong></div>", unsafe_allow_html=True)
+
     # Header
     st.markdown(f"# {t['title']}")
     st.markdown(f'<p class="subtitle">{t["subtitle"]}</p>',

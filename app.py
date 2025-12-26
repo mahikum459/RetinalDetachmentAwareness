@@ -765,7 +765,7 @@ def main():
     if "page_view_tracked" not in st.session_state:
         st.session_state.page_view_tracked = True
         # increment_counter('page_views')
-        send_view_notification()
+        # send_view_notification()
 
     # Initialize form version for reset functionality
     if "form_version" not in st.session_state:

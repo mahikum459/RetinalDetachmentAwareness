@@ -9,7 +9,7 @@ import requests
 @st.cache_resource
 def get_db_connection():
     return psycopg2.connect(os.environ.get("DATABASE_URL"))
-
+'''
 @st.cache_resource
 def init_counter_table():
     try:
@@ -45,7 +45,6 @@ def init_counter_table():
         return True
     except Exception as e:
         return False
-
 
 def increment_counter(counter_name='assessments'):
     try:
@@ -83,7 +82,6 @@ def get_counter(counter_name='assessments'):
         return result[0] if result else 0
     except Exception as e:
         return 0
-
 
 def send_view_notification():
     """Send email notification when someone views the app"""
@@ -125,10 +123,10 @@ def send_view_notification():
         return response.status_code == 202
     except Exception as e:
         return False
-
+'''
 
 # Initialize counter table on startup
-init_counter_table()
+# init_counter_table()
 
 # Page configuration
 st.set_page_config(page_title="Retinal Detachment Risk Assessment",
@@ -204,8 +202,6 @@ TRANSLATIONS = {
     "English": {
         "title":
         "👁️ Retinal Detachment Awareness Check",
-        "users":
-        "Users",
         "subtitle":
         "This tool helps determine how urgently you should see an eye care professional based on your risk factors and symptoms.",
         "language":
@@ -793,8 +789,8 @@ def main():
     t = TRANSLATIONS[language]
 
     # Display user count at the top
-    user_count = get_counter('page_views')
-    st.markdown(f"<div style='text-align: right; color: #64748b; font-size: 0.9rem; margin-bottom: 0.5rem;'>👥 Users: <strong>{user_count:,}</strong></div>", unsafe_allow_html=True)
+    #user_count = get_counter('page_views')
+    #st.markdown(f"<div style='text-align: right; color: #64748b; font-size: 0.9rem; margin-bottom: 0.5rem;'>👥 Users: <strong>{user_count:,}</strong></div>", unsafe_allow_html=True)
 
     # Header
     st.markdown(f"# {t['title']}")

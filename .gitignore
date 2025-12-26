@@ -1,0 +1,17 @@
+# Replit artifacts
+replit.md
+.replit
+replit.nix
+
+# secrets
+.env
+.env.*
+*.pem
+*.key
+
+# python
+__pycache__/
+*.pyc
+
+# mac
+.DS_Store

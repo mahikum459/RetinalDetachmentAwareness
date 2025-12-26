@@ -97,7 +97,7 @@ def send_view_notification():
             "Content-Type": "application/json"
         }
 
-        current_views = get_counter('page_views')
+        # current_views = get_counter('page_views')
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         data = {
@@ -764,7 +764,7 @@ def main():
     # Track page view only once per session (not on every rerun)
     if "page_view_tracked" not in st.session_state:
         st.session_state.page_view_tracked = True
-        increment_counter('page_views')
+        # increment_counter('page_views')
         send_view_notification()
 
     # Initialize form version for reset functionality
@@ -1160,7 +1160,7 @@ def main():
             st.error(f"{t['missing_fields']} {', '.join(missing_fields)}")
         else:
             # Increment the assessment counter
-            increment_counter()
+            # increment_counter()
             percentage = calculate_percentage(points)
             show_results(points, percentage, emergency_override)
 
@@ -1172,10 +1172,10 @@ def main():
 
         col1, col2 = st.columns(2)
         with col1:
-            page_views = get_counter('page_views')
+            # page_views = get_counter('page_views')
             st.metric("Total Page Views", page_views)
         with col2:
-            assessments = get_counter('assessments')
+            # assessments = get_counter('assessments')
             st.metric("Assessments Completed", assessments)
 
         # Show detailed view log

@@ -9,121 +9,121 @@ import requests
 @st.cache_resource
 def get_db_connection():
     return psycopg2.connect(os.environ.get("DATABASE_URL"))
-'''
-@st.cache_resource
-def init_counter_table():
-    try:
-        conn = psycopg2.connect(os.environ.get("DATABASE_URL"))
-        cur = conn.cursor()
-        cur.execute("""
-            CREATE TABLE IF NOT EXISTS view_counter (
-                id SERIAL PRIMARY KEY,
-                counter_name VARCHAR(50) UNIQUE NOT NULL,
-                count INTEGER DEFAULT 0
-            )
-        """)
-        cur.execute("""
-            INSERT INTO view_counter (counter_name, count) 
-            VALUES ('assessments', 0) 
-            ON CONFLICT (counter_name) DO NOTHING
-        """)
-        cur.execute("""
-            INSERT INTO view_counter (counter_name, count) 
-            VALUES ('page_views', 0) 
-            ON CONFLICT (counter_name) DO NOTHING
-        """)
-        cur.execute("""
-            CREATE TABLE IF NOT EXISTS view_log (
-                id SERIAL PRIMARY KEY,
-                view_type VARCHAR(50) NOT NULL,
-                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-        """)
-        conn.commit()
-        cur.close()
-        conn.close()
-        return True
-    except Exception as e:
-        return False
 
-def increment_counter(counter_name='assessments'):
-    try:
-        conn = psycopg2.connect(os.environ.get("DATABASE_URL"))
-        cur = conn.cursor()
-        cur.execute(
-            """
-            UPDATE view_counter SET count = count + 1 
-            WHERE counter_name = %s
-            RETURNING count
-        """, (counter_name, ))
-        result = cur.fetchone()
-        cur.execute(
-            """
-            INSERT INTO view_log (view_type, timestamp) 
-            VALUES (%s, %s)
-        """, (counter_name, datetime.now()))
-        conn.commit()
-        cur.close()
-        conn.close()
-        return result[0] if result else 0
-    except Exception as e:
-        return 0
+# @st.cache_resource
+# def init_counter_table():
+#     try:
+#         conn = psycopg2.connect(os.environ.get("DATABASE_URL"))
+#         cur = conn.cursor()
+#         cur.execute("""
+#             CREATE TABLE IF NOT EXISTS view_counter (
+#                 id SERIAL PRIMARY KEY,
+#                 counter_name VARCHAR(50) UNIQUE NOT NULL,
+#                 count INTEGER DEFAULT 0
+#             )
+#         """)
+#         cur.execute("""
+#             INSERT INTO view_counter (counter_name, count) 
+#             VALUES ('assessments', 0) 
+#             ON CONFLICT (counter_name) DO NOTHING
+#         """)
+#         cur.execute("""
+#             INSERT INTO view_counter (counter_name, count) 
+#             VALUES ('page_views', 0) 
+#             ON CONFLICT (counter_name) DO NOTHING
+#         """)
+#         cur.execute("""
+#             CREATE TABLE IF NOT EXISTS view_log (
+#                 id SERIAL PRIMARY KEY,
+#                 view_type VARCHAR(50) NOT NULL,
+#                 timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+#             )
+#         """)
+#         conn.commit()
+#         cur.close()
+#         conn.close()
+#         return True
+#     except Exception as e:
+#         return False
+
+# def increment_counter(counter_name='assessments'):
+#     try:
+#         conn = psycopg2.connect(os.environ.get("DATABASE_URL"))
+#         cur = conn.cursor()
+#         cur.execute(
+#             """
+#             UPDATE view_counter SET count = count + 1 
+#             WHERE counter_name = %s
+#             RETURNING count
+#         """, (counter_name, ))
+#         result = cur.fetchone()
+#         cur.execute(
+#             """
+#             INSERT INTO view_log (view_type, timestamp) 
+#             VALUES (%s, %s)
+#         """, (counter_name, datetime.now()))
+#         conn.commit()
+#         cur.close()
+#         conn.close()
+#         return result[0] if result else 0
+#     except Exception as e:
+#         return 0
 
 
-def get_counter(counter_name='assessments'):
-    try:
-        conn = psycopg2.connect(os.environ.get("DATABASE_URL"))
-        cur = conn.cursor()
-        cur.execute("SELECT count FROM view_counter WHERE counter_name = %s",
-                    (counter_name, ))
-        result = cur.fetchone()
-        cur.close()
-        conn.close()
-        return result[0] if result else 0
-    except Exception as e:
-        return 0
+# def get_counter(counter_name='assessments'):
+#     try:
+#         conn = psycopg2.connect(os.environ.get("DATABASE_URL"))
+#         cur = conn.cursor()
+#         cur.execute("SELECT count FROM view_counter WHERE counter_name = %s",
+#                     (counter_name, ))
+#         result = cur.fetchone()
+#         cur.close()
+#         conn.close()
+#         return result[0] if result else 0
+#     except Exception as e:
+#         return 0
 
-def send_view_notification():
-    """Send email notification when someone views the app"""
-    try:
-        api_key = os.environ.get("SENDGRID_API_KEY")
-        notify_email = os.environ.get("NOTIFY_EMAIL")
-        if not api_key or not notify_email:
-            return False
+# def send_view_notification():
+#     """Send email notification when someone views the app"""
+#     try:
+#         api_key = os.environ.get("SENDGRID_API_KEY")
+#         notify_email = os.environ.get("NOTIFY_EMAIL")
+#         if not api_key or not notify_email:
+#             return False
 
-        url = "https://api.sendgrid.com/v3/mail/send"
-        headers = {
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json"
-        }
+#         url = "https://api.sendgrid.com/v3/mail/send"
+#         headers = {
+#             "Authorization": f"Bearer {api_key}",
+#             "Content-Type": "application/json"
+#         }
 
-        # current_views = get_counter('page_views')
-        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+#         # current_views = get_counter('page_views')
+#         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        data = {
-            "personalizations": [{
-                "to": [{
-                    "email": notify_email
-                }]
-            }],
-            "from": {
-                "email": notify_email
-            },
-            "subject":
-            f"Retinal Risk App - New Visitor (Total: {current_views})",
-            "content": [{
-                "type":
-                "text/plain",
-                "value":
-                f"Someone opened the Retinal Detachment Risk Assessment app.\n\nTime: {current_time}\nTotal Page Views: {current_views}"
-            }]
-        }
+#         data = {
+#             "personalizations": [{
+#                 "to": [{
+#                     "email": notify_email
+#                 }]
+#             }],
+#             "from": {
+#                 "email": notify_email
+#             },
+#             "subject":
+#             f"Retinal Risk App - New Visitor (Total: {current_views})",
+#             "content": [{
+#                 "type":
+#                 "text/plain",
+#                 "value":
+#                 f"Someone opened the Retinal Detachment Risk Assessment app.\n\nTime: {current_time}\nTotal Page Views: {current_views}"
+#             }]
+#         }
 
-        response = requests.post(url, headers=headers, json=data, timeout=5)
-        return response.status_code == 202
-    except Exception as e:
-        return False
-'''
+#         response = requests.post(url, headers=headers, json=data, timeout=5)
+#         return response.status_code == 202
+#     except Exception as e:
+#         return False
+
 
 # Initialize counter table on startup
 # init_counter_table()

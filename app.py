@@ -741,7 +741,7 @@ TRANSLATIONS = {
     }
 }
 
-
+'''
 def calculate_percentage(points):
     """Convert points to percentage risk using interpolation"""
     if points == 0:
@@ -758,6 +758,7 @@ def calculate_percentage(points):
         return 75 + ((points - 20) / 5) * 10
     else:
         return min(90, 85 + (points - 25) * 0.5)
+'''
 
 
 def main():
@@ -1066,12 +1067,11 @@ def main():
         missing_fields.append(t["triggers"].replace(": *", ""))
 
     @st.dialog(t["results_title"], width="large")
-    def show_results(points, percentage, emergency_override):
-        # Metrics
+    def show_results(points, emergency_override):
         col1, col2 = st.columns([1, 1])
+        # with col1:
+        #     st.metric(t["risk_percentage"], f"{percentage:.1f}%")
         with col1:
-            st.metric(t["risk_percentage"], f"{percentage:.1f}%")
-        with col2:
             if emergency_override or points >= 15:
                 risk_tier = t["very_high"]
             elif points >= 10:
@@ -1103,7 +1103,7 @@ def main():
             st.warning(f"### {t['high_title']}")
             st.markdown(f"""
             <div style='background-color: #fef3c7; padding: 1.5rem; border-radius: 8px; border-left: 5px solid #f59e0b;'>
-                <h4 style='color: #92400e; margin-top: 0;'>{t['high_msg']} ({percentage:.1f}%)</h4>
+                <h4 style='color: #92400e; margin-top: 0;'>{t['high_msg']}</h4>
                 <p style='color: #78350f; font-size: 1.1rem; font-weight: 600;'>
                 {t['high_action']}
                 </p>
@@ -1117,7 +1117,7 @@ def main():
             st.info(f"### {t['moderate_title']}")
             st.markdown(f"""
             <div style='background-color: #dbeafe; padding: 1.5rem; border-radius: 8px; border-left: 5px solid #3b82f6;'>
-                <h4 style='color: #1e40af; margin-top: 0;'>{t['moderate_msg']} ({percentage:.1f}%)</h4>
+                <h4 style='color: #1e40af; margin-top: 0;'>{t['moderate_msg']} </h4>
                 <p style='color: #1e3a8a; font-size: 1.1rem; font-weight: 600;'>
                 {t['moderate_action']}
                 </p>
@@ -1131,7 +1131,7 @@ def main():
             st.success(f"### {t['low_title']}")
             st.markdown(f"""
             <div style='background-color: #d1fae5; padding: 1.5rem; border-radius: 8px; border-left: 5px solid #10b981;'>
-                <h4 style='color: #065f46; margin-top: 0;'>{t['low_msg']} ({percentage:.1f}%)</h4>
+                <h4 style='color: #065f46; margin-top: 0;'>{t['low_msg']} </h4>
                 <p style='color: #064e3b; font-size: 1.1rem; font-weight: 600;'>
                 {t['low_action']}
                 </p>
@@ -1161,8 +1161,8 @@ def main():
         else:
             # Increment the assessment counter
             # increment_counter()
-            percentage = calculate_percentage(points)
-            show_results(points, percentage, emergency_override)
+            # percentage = calculate_percentage(points)
+            show_results(points, emergency_override)
 
     # Hidden admin view - only accessible via URL parameter ?admin=retina2024
     query_params = st.query_params

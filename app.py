@@ -741,24 +741,24 @@ TRANSLATIONS = {
     }
 }
 
-'''
-def calculate_percentage(points):
-    """Convert points to percentage risk using interpolation"""
-    if points == 0:
-        return 1
-    elif points <= 5:
-        return 1 + (points / 5) * 7
-    elif points <= 10:
-        return 8 + ((points - 5) / 5) * 22
-    elif points <= 15:
-        return 30 + ((points - 10) / 5) * 30
-    elif points <= 20:
-        return 60 + ((points - 15) / 5) * 15
-    elif points <= 25:
-        return 75 + ((points - 20) / 5) * 10
-    else:
-        return min(90, 85 + (points - 25) * 0.5)
-'''
+
+# def calculate_percentage(points):
+#     """Convert points to percentage risk using interpolation"""
+#     if points == 0:
+#         return 1
+#     elif points <= 5:
+#         return 1 + (points / 5) * 7
+#     elif points <= 10:
+#         return 8 + ((points - 5) / 5) * 22
+#     elif points <= 15:
+#         return 30 + ((points - 10) / 5) * 30
+#     elif points <= 20:
+#         return 60 + ((points - 15) / 5) * 15
+#     elif points <= 25:
+#         return 75 + ((points - 20) / 5) * 10
+#     else:
+#         return min(90, 85 + (points - 25) * 0.5)
+
 
 
 def main():
